@@ -1,0 +1,38 @@
+**Given an array of positive integers arr[] of size n, the task is to find second largest distinct element in the array.**
+**Note: If the second largest element does not exist, return -1.**
+
+One Pass Search method :
+code:
+______________________________________________________________________________________________________________________________________________________________________________________________
+class Solution:
+    def getSecondLargest(self,arr):
+        # initialize the n as length of the array
+        n = len(arr)
+        # initalize secondlargest anfd largest as -1
+        secondlargest = -1
+        largest = -1
+        
+        for i in range(n):
+            
+            if arr[i] > largest:
+                secondlargest = largest
+                
+                largest = arr[i]
+                
+            elif secondlargest < arr[i] and arr [i] < largest:
+                
+                secondlargest = arr[i]
+            
+        return secondlargest
+            
+        
+        
+        
+if __name__=="__main__":
+    sol = Solution()
+    arr = [12,35,1,10,34,1] 
+    sol.getSecondLargest(arr)
+# print(result)
+____________________________________________________________________________________________________________________________________________________________________________________________
+Time Complexity: O(n), as we are traversing the array only once.
+Auxiliary space: O(1)
