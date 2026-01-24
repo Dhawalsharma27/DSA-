@@ -1,0 +1,32 @@
+**Reverse an array arr[]. Reversing an array means rearranging the elements such that the first element becomes the last, the second element becomes second last and so on**
+**Note: Modify the array in place**
+two pointer approach:
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Code :
+class Solution:
+    def reverseArray(self,arr):
+      left = 0
+    right = len(arr) - 1
+  
+    # Iterate till left is less than right
+    while left < right:
+        
+        # Swap the elements at left
+        # and right position
+        arr[left], arr[right] = arr[right], arr[left]
+      
+        # Increment the left pointer
+        left += 1
+      
+        # Decrement the right pointer
+        right -= 1
+        
+      return arr
+    
+if __name__ == "__main__":
+    arr = [4,2,3,1]
+    ob = Solution()
+    ob.reverseArray
+__________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Time Complexity: O(n)
+Auxiliary Space: O(1)
