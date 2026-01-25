@@ -2,3 +2,36 @@
 **Note: Consider the array as circular**
 
 Using Reversal Algorithm:
+__________________________________________________________________________________________________________________________________________________________________________________
+code:
+#User function Template for python3
+
+class Solution:
+    #Function to rotate an array by d elements in counter-clockwise direction. 
+    def rotateArr(self, arr, d):
+         #Array ka size n me store kiya
+         n = len(arr)
+         #Agar d array ke size se bada ho toh d ko range me lane ke liye modulo liya
+         d %= n
+         #Index 0 se d-1 tak ke elements reverse
+         self.reverse(arr,0,d-1)
+         #Index d se last tak reverse
+         self.reverse(arr,d,n-1)
+         #Full array reverse final rotated array
+         self.reverse(arr,0,n-1)
+    #function to reverse    
+    def  reverse(self,arr,start,end):
+        while start < end:
+            arr[start],arr[end] = arr[end],arr[start]
+            start += 1
+            end -= 1
+if __name__ =="__main__":
+    arr = [1,2,3,4,5,6]
+    d = 3
+    ob = Solution()
+    ob.rotateArr(arr,d)
+_________________________________________________________________________________________________________________________________________________________________________________
+Time Complexity: O(n)
+Auxiliary Space: O(1)
+    
+
