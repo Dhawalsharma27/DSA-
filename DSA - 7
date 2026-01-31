@@ -1,0 +1,29 @@
+***Given an array prices[] representing stock prices, find the maximum total profit that can be earned by buying and selling the stock any number of times***
+***Note: We can only sell a stock which we have bought earlier and we cannot hold multiple stocks on any day***
+By Accumulating Profit:
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________
+code:
+from typing import List
+
+
+class Solution:
+    def maximumProfit(self, prices) -> int:
+        # result intialize as 0
+        res = 0
+        # initialize n as the length of the price  arrat
+        n = len(prices)
+        # if the prices of the price index is les then price index - 1
+        for i in range (1,n):
+            if prices[i] > prices[i-1]:
+                # result will be the sum of  the profit at everry iteration andd iff there is no profit then nothing will be added
+                res += prices[i] - prices[i - 1]
+            
+        return res 
+        
+if __name__ == "__main__":
+    prices = [100,180,234,40,535,695]
+    ob = Solution()
+    ob.maximumProfit(prices)
+__________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Time Complexity: O(n)
+Auxiliary Space: O(1)
