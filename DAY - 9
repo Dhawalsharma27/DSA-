@@ -1,0 +1,53 @@
+***Given an array arr[] denoting heights of n towers and a positive integer k***
+***For each tower, you must perform exactly one of the following operations exactly once***
+   Increase the height of the tower by k
+   Decrease the height of the tower by k
+   Find out the minimum possible difference between the height of the shortest and tallest towers after you have modified each tower.
+Note: It is compulsory to increase or decrease the height by k for each tower. After the operation, the resultant array should not contain any negative integers.
+Using Sorting :
+ Sort the array arr in non-decreasing order.
+ Initialize ans = arr[n-1] - arr[0].
+ Precompute smallest = arr[0] + k and largest = arr[n-1] - k.
+ Loop for i = 1 to n-1:
+ => If arr[i] - k < 0, continue (heights can’t be negative).
+ => minH = min(smallest, arr[i] - k).
+ => maxH = max(largest, arr[i-1] + k).
+ => ans = min(ans, maxH - minH).
+ Return ans.
+___________________________________________________________________________________________________________________________________________________________________________________________
+code:
+class Solution:
+    def getMinDiff(self, arr,k):
+        # initialize n as the lenght of the arrary
+        n = len(arr)
+        # sort the array
+        arr.sort()
+        # initialize the result as array index 0 - n-1
+        res = arr[n-1] - arr[0]
+        
+        for i in range (1 , n):
+            # skip until arr[i] - k is negative
+            if arr[i] - k < 0:
+                continue
+            # now i is index where arr[i] - k is not negative
+            # finds the minimumm as minimum can be only this two index 
+            minH = min(arr[0] + k , arr[i] - k)
+            
+            # finds the maximum as maximu can only this two index 
+            maxH = max(arr[i - 1] + k , arr[n-1] - k)
+            
+            # result will be maximum of the result or maximumm - minimum
+            res = min(res, maxH - minH)
+            
+        return res
+        
+if __name__ == "__main__":
+    k = 2
+    arr = [1,5,8,10]
+    obj = Solution()
+    obj.getMinDiff(arr,k)
+___________________________________________________________________________________________________________________________________________________________________________________________________
+Time Complexity: O(n log n)
+Auxiliary Space: O(1)
+
+ 
