@@ -1,0 +1,48 @@
+import java.util.*;
+
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        // n is equal to the numbers of histograms in the array
+        int n = heights.length;
+        // left array mein har index ke liye uske left mein jo chota element hai uska index store karenge
+        int [] left = new int[n];
+        // right array mein har index ke liye uska right mein jo chota element hai uska index store karenge
+        int [] right = new int[n];
+        Stack<Integer> stack = new Stack<>();
+        // find left smaller elements isse humein pata chalega ki rectangle kitna left tak extend ho sakta hai 
+        for (int i = 0; i < n; i++) {
+            // agar stack ke top wala height current height se bada hai toh vo kaam ka nahi hai, pop kar do 
+            while (!stack.isEmpty () && heights [stack.peek()] >= heights[i]) stack.pop();
+            
+            // agar stack khali hai, matlab usse chota koi nhi mila, toh  -1 assign karo
+            left[i] = stack.isEmpty() ? -1: stack.peek();
+
+            // current index ko stack mein dalo taki aage use ho sake 
+            stack.push(i);
+        }
+        // Agle step ke liye stack ko clear karna zaroori hai
+        stack.clear();
+        // find right smaller elements: isse humein pata chalega ki rectangle kitna right tak extend ho sakta hai
+        for (int i = n -1; i >= 0; i--) {
+            // whai logic right se agar stack top bada/ equal hai toh pop karo 
+            while (!stack.isEmpty() && heights [stack.peek()] >= heights[i]) stack.pop();
+            // agar stack kahli hai , matlab right side mein koi chota nahi mila toh boundary 'n' maan lo
+            right[i] = stack.isEmpty() ? n: stack.peek();
+            stack.push(i);
+        }
+
+        int maxArea = 0;
+
+        // har bar (bar i) ke liye, area calculate karo using (right boundary - left boundary)
+        for ( int i = 0; i < n; i++) {
+            // width ka formula:(right index - left index - 1)
+            int width = right[i] - left[i] - 1;
+             // area = height * width, aur ab tak ka maxArea update karte raho
+            maxArea = Math.max(maxArea, heights[i] * width);
+        }
+        return maxArea;
+            
+    }
+}
+
+Question: https://leetcode.com/problems/largest-rectangle-in-histogram/
