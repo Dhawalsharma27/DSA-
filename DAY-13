@@ -1,0 +1,46 @@
+import java.util.HashSet;
+import java.util.Set;
+
+public class Solution{
+    public int longestConsecutive(int [] nums) {
+        // Agar array empty hai toh consecutive sequence ki length 0 hogi
+        if (nums == null || nums.length == 0) return 0;
+
+        // hashset initialize karenge
+        Set<Integer> numSet = new HashSet<>();
+
+        // array ke sare numbers ko hashset mei dalo isse duplicates bhi automatically remove ho jayenge
+        for ( int num : nums) {
+            numSet.add(num);
+        }
+
+        int result = 0;// yeh variable sabse lambi sequence store karega
+
+        // ab  hum original array ki jagah numSet par iterate kargenge taki duplicate par baar-baar kaam na karna pade
+        for (int num : numSet) {
+
+            // hum sequence ki ginti  *sirf tabhi shuru karenge agar 'num' us sequence ka pehla /starting number ho
+            // kaise pata chalega? agar num - 1 set me nahi hai, iska mtlab num se chota koi consecutive nummber nahi hai.
+            // yani yahi se sequence start ho rahi hai
+            if (!numSet.contains(num - 1)) { // agar numSet mei num - 1 nahi hai 
+                int currentNum = num; // sequence ka current number track karne ke liye
+                int currentStreak = 1; // is nayi sequence ki lambai 2 se start hogi(kyuki 'num' khud ek element hai
+            
+                // Jab tak `currentNum + 1` (yani agla consecutive number) set me milta rahega...
+                while (numSet.contains(currentNum + 1)) {
+                    currentNum += 1; // Agle number par jao
+                    currentStreak += 1;  // Sequence ki length badhao
+                }
+                // Jab sequence khatam ho jaye, toh check karo ki kya yeh ab tak ki sabse lambi sequence hai?
+                // Math.max se hum maximum value ko 'longestStreak' me store kar lenge.
+                result = Math.max(currentStreak, result);
+            }
+
+        }
+        return result;
+        
+    }
+}
+
+
+problem :- https://leetcode.com/problems/longest-consecutive-sequence/?envType=problem-list-v2&envId=oizxjoit
