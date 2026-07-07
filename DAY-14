@@ -1,0 +1,35 @@
+class Solution {
+    public int findMinArrowShots(int[][] points) {
+        // if the array is empty
+        if (points == null || points.length == 0) {
+            return 0;
+        }
+        // yeh sort karega on the basis of endpoints
+        Arrays.sort(points,(a,b) -> Integer.compare(a[1], b[1]));
+
+        // kam se kam ek arrow toh lagega hi brust karne ke liye toh us ek arrow ko humlog starting ballon ke end point par rakhenge 
+        int arrowCount = 1 ;
+        int currentEnd = points[0][1]; //[0][1] mtlb 0 index pe jo ballon hai uska second coordinate
+        // loop chalayenge points array ke length se ek kam tak aur start karenge insex 1 mtlb second ballon se 
+        for (int i = 1 ; i < points.length; i++) {
+            // i = 1 pe index 1 wala ballon ka 1st cordinate [1][0] nextstart hoga aur 2nd coordinate [1][1] nextend hoga
+            int nextStart = points[i][0];
+            int nextEnd = points[i][1];
+            // ab koi ballon ka start current ballon ke end pe lie kar raha hai toh vo toh same array se brust ho jayega 
+            // mtlb arrow ke count ko badhane ki jarurt nahi hai 
+            // toh arrow ka count tab badhayenge jab next ballonn ka jo start hai vo current ke end se jyada hoga 
+            if (nextStart > currentEnd ) {
+                arrowCount++;
+                // aur jo current end hai vo next end ke equal ho jayega taki check kar sake next ballons ko
+                currentEnd = nextEnd;
+            } 
+        }
+
+        return arrowCount;
+
+
+        
+    }
+}
+
+problem:- https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/
