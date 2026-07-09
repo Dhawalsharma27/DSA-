@@ -1,0 +1,26 @@
+import java.util.HashMap;
+
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        HashMap<Integer,Integer> map = new HashMap<>();
+        int n = nums.length;
+        // answer ke liye array bana rahe hai size of 2
+        int[] ans = new int[2];
+        for (int i= 0 ; i < n ; i++) {
+            // Hum array ke current element ko ek variable currentNumber mein store kar rahe hain.
+            int currentNumber = nums[i];
+            if (map.containsKey(target - currentNumber)){
+                // ans array ka size 2 hai mtlb 2 index hoga toh index 0 mei hum store karenge index of the number (target - currentNumber se jo mila) jese 9 - 7 = 2 jiska index 0 hai toh ans ke index0 pe store hoga 2 ka index aur ans[1] pe store hoga currentNumber ka index
+                ans[0] = map.get(target - currentNumber);
+                ans[1] = i;
+            }
+            // current number aur uska index map mei put kardenge kuyki conditon statisfy nahi kar paya
+            map.put(currentNumber, i);
+            
+        }
+
+        return ans;
+    }
+}
+
+problem :- https://leetcode.com/problems/two-sum/
