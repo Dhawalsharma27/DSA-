@@ -1,0 +1,73 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+
+        ListNode dummyHead = new ListNode(0); // Without a dummy node, you have to write an extra 'if' check. If you try to append to a null list, you get errors. By starting with a "dummy" node, we ensure there is always a valid node in existence.
+
+        ListNode current = dummyHead; // we initialize dummyhead as current node
+
+        // ek variable initialize karenge carry store karne ke liye first it is 0
+        int carry = 0;
+        // jab tak l1 aur l2 khali nahi hojata tabtak
+        while (l1 != null || l2 != null) {
+            // ek variable named sum ka use karenge jo ki carry ke equal hoga
+            int sum = carry;
+
+            // sum mei append kardo l1 linkedlist ke current element ki value ko
+            // now we will check the that l1 is null or l2 is null because if any list goes null then while loop will through nullpointerexception (its for differnt size array).
+            if(l1 != null){
+                sum += l1.val;
+                l1 = l1.next;
+            }
+            
+            if (l2 != null) {
+                sum += l2.val;
+                l2 = l2.next;
+            }
+            
+
+            // carry samne wala number hoga toh sum / 10 
+            carry = sum / 10;
+            // now we will take a variable to move from 1 node to another new node 
+
+            //abhi current node ki value dummynode hai toh answer ke liye current node ki value sum ka piche wala number hoga store hoga new ListNode mei
+            current.next = new ListNode(sum % 10); 
+            
+            
+            // Ab current jo hai vo jo naya node banaye hai vo ho jayega 
+            current = current.next;
+            
+        }
+        
+        // if last mei carry 1 bach jata hai toh vo toh store nahi hoga sum % 10 se toh uske liye carry ko naya node bana ke store karwana padega aur yeh loop ke bahar hoga so ->
+        if (carry > 0) {
+                current.next = new ListNode(carry);
+            }
+
+
+        return dummyHead.next; 
+        // dummyHead is just a fake placeholder node. actual answer list begins right after it.
+    }
+}
+
+
+// dry run
+// l1 is at 9, l2 is at 9
+// .int sum = carry;-> sum = 0
+// if (l1 != null) -> True! sum += 9 (9), l1 moves to next 9.
+// if (l2 != null) -> True! sum += 9 (18), l2 moves to next 9.
+// carry = 18 / 10; -> carry = 1
+// current.next = new ListNode(18 % 10); -> Connects a [8] node.
+// current = current.next; -> current moves to [8].
+// Result list so far: [0] -> [8]
+
+https://leetcode.com/problems/add-two-numbers/
