@@ -1,0 +1,24 @@
+class Solution {
+    public String removeDuplicates(String s) {
+        // ek character array banayenge result store karane ke liye
+        char [] res = s.toCharArray();
+        // ek pointer lenge result array mei point kar raha first element 
+        int i = 0;
+        // ab ek aur pointer lenge  j jo traverse karega string mei humlog i pointer ko stack ke top pointer ki tarah use karenge
+        for (int j = 0; j < s.length(); j++) {
+            // check karenge ki agar stack empty nahi hai mtlb i pointer 0 se jyada hai aur res[i-1] stack ka top element  == res[j] current pointer on string toh i pointer ko ek shift kardo piche mtlb top element piche wala hojayega(pop) 
+            //Note we are not physically deleting the element 
+            if ( i > 0 && res[i - 1] == res[j]) {
+                i--;
+            } else{
+                // nhi toh res[i] mtlb top element res[j] ke equal ho jayega(push) aur i index ko increment kardo
+                res[i] = res[j];
+                i++;
+            }
+        }
+        // return karega string from res array starting from 0 to i(exclusive)
+        return new String(res , 0 , i);
+    }
+}
+
+problem: https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/
