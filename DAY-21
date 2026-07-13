@@ -1,0 +1,44 @@
+import java.util.Stack;
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        // ek stack bana rahe hai jismei 
+        Stack<Integer> st = new Stack<>();
+        // ek variable bana rahe hai jismei temperature array ka length store karenge
+        int n = temperatures.length;
+        // ek integer array ban rahe hai jismei humlog answer store karenge
+        int[] answer = new int[n];
+        // ek loop chalayenge
+        for (int i = 0; i< n ; i++) {
+            // check karenge ki stack empty hai ki nahi aur agar jo current index temperature hai vo stack ke peek mei jo temperature se bada hai ki nahi
+            while (!st.isEmpty() && temperatures[i] > temperatures[st.peek()]){
+                // agar bda hai toh stack se pop kardo element ko aur previous index name ke variable mei store kardo
+                int prevIndex =st.pop();
+                // aur answer array array mei prevIndex par uska i ka index aur prevIndex ka index ka diffrence 
+                answer[prevIndex] = i - prevIndex;
+            }
+        // agar bada nahi hai toh stack mei us element ko push kardo
+        st.push(i);
+        }
+
+    return answer;
+    }
+}
+
+// dry run:-
+//  i = 0 
+//  temperature[0] =73 
+//  st is empty so push index 0 to stack
+
+// i = 1 
+// temperature[1] =74
+// st is not empty and st ke peek element < temperature[1] 
+// prevIndex variable mei stack mei jo index store hai uske element ko store karenge 
+// answer[prevIndex] = answer[0] as prevIndex is 0 will be equal to i - previndex = 1 - 0 = 1 so answer[0] = 1
+
+// st is empty now. Loop ends
+// now push index i[1] in st so st = [1]
+// Current answer: [1, 0, 0, 0, 0, 0, 0, 0]
+
+// i=2
+
+problem:-https://leetcode.com/problems/daily-temperatures/
