@@ -1,0 +1,41 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public boolean isBalanced(TreeNode root) {
+        // base ase khali hamesha balanced hota hai 
+        if (root == null) {
+            return true;//Note: return true, kyunki method ka return type boolean hai!
+        }
+        // direct left and right height calculate karenge
+        int leftHeight = height(root.left);
+        int rightHeight = height(root.right);
+
+        // agar dono height ki absolute diffrence agar 1 ya 1 se choti hai  aur left subtree and right subtree balanced hai toh
+        return Math.abs(leftHeight - rightHeight) <= 1
+                && isBalanced(root.left)
+                && isBalanced(root.right);
+    }
+    // helper function to calculate the height
+    private int height(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+        // height maximum batata hai har node ka 
+        return Math.max(height(node.left), height(node.right)) +1;
+    }
+}
+
+problem:- https://leetcode.com/problems/balanced-binary-tree/
