@@ -1,0 +1,33 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int maxDepth(TreeNode root) {
+        // first we will check if the root is null agar null hai toh 0 return kardo
+        if(root == null) {
+            return 0;
+        }
+        // ab int leftDepth variable mei left child pe recursion function lagayenge mtlb har bar uske left  child pe check karge ki vo null hai ki nahi aur depth store karta jayega
+        int leftDepth = maxDepth(root.left);
+        // same for right child
+        int rightDepth = maxDepth(root.right);
+        
+    //    ab humko return karna hai max out of left and right with adding the root (+1)
+        return Math.max(leftDepth, rightDepth) + 1;
+    }
+}
+
+
+problem:- https://leetcode.com/problems/maximum-depth-of-binary-tree/
