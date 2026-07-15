@@ -1,0 +1,28 @@
+class Solution {
+    public String convert(String s, int numRows) {
+        if (numRows == 1 || s.length() <= numRows) {
+            return s;
+        }
+
+        StringBuilder result = new StringBuilder();
+        int n = s.length();
+        int cycleLen = 2 * numRows - 2;
+
+        // Process row by row
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j + i < n; j += cycleLen) {
+                // Append the vertical character of the cycle
+                result.append(s.charAt(j + i));
+                
+                // If we are in a middle row, we must also append the diagonal character
+                if (i != 0 && i != numRows - 1 && j + cycleLen - i < n) {
+                    result.append(s.charAt(j + cycleLen - i));
+                }
+            }
+        }
+
+        return result.toString();
+    }
+}
+
+problem:- https://leetcode.com/problems/zigzag-conversion/
