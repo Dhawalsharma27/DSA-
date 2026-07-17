@@ -1,0 +1,24 @@
+class Solution {
+    public int bitwiseComplement(int n) {
+        // base case as complement of 0 is one
+        if ( n == 0 ) return 1;
+
+        int mask = 0; 
+        int temp = n;
+
+        while (temp > 0) {
+            mask = (mask << 1) | 1;
+            temp >>= 1;
+        }
+
+        return n ^ mask;
+        
+    }
+}
+// dry run
+// n = 5 (101), temp = 5, mask = 0
+
+
+
+
+problem:- https://leetcode.com/problems/complement-of-base-10-integer/
