@@ -1,0 +1,43 @@
+class Solution {
+    public int maxSubarraySumCircular(int[] nums) {
+        // total sum variable to store the total sum of the array
+        int TotalSum = 0;
+
+        // we will store the maximum sum from kadane's algorithm
+        int maxNormal = nums[0];
+        // we will intiliaze a variable to keep track of maximum sum currently
+        int CurrentMax = 0;
+
+
+        // we will store the minimum sum from kadane's algorithm
+        int minNormal = nums[0];
+        // we will store the current minimum sum in a variable
+        int CurrentMin = 0;
+
+        // let calculate the total sum of the nums array elements
+        for(int num : nums) {
+            TotalSum += num;
+
+            // current max will be maximum of the currentmax or current + num
+            CurrentMax = Math.max(num , CurrentMax + num);
+            // maxNormal we be the biggest sum till now 
+            maxNormal = Math.max(maxNormal , CurrentMax);
+            // current min will be minimum of the currentmin or currentmin + num
+            CurrentMin = Math.min(num , CurrentMin + num);
+            // minNormal will be the smallest sum till now
+            minNormal = Math.min(minNormal, CurrentMin);
+
+        }
+        // agar maxNormal )se bada hai toh 
+        if(maxNormal < 0) {
+            return maxNormal;
+        }
+
+        return Math.max(maxNormal, TotalSum - minNormal);
+
+        
+    }
+}
+
+
+problem:- https://leetcode.com/problems/maximum-sum-circular-subarray/
