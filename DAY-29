@@ -1,0 +1,70 @@
+import java.util.*;
+
+class Solution {
+    public int[][] updateMatrix(int[][] mat) {
+        // intializing queue , no. of rows, no. of columns
+        int m = mat.length;
+        int n = mat[0].length;
+        Queue<int[]> q = new LinkedList<>(); 
+
+        // ek loop chalayenge matirx ke accross jo ki check kargega ki matrix ka current element 0 hai ki nahi agar hai toh uske index ka array bana ke queue mei dalo nahi toh usko -1 ke equal kardo
+        for( int i = 0 ; i < m; i++) {
+            for( int j = 0; j < n; j++) {
+                if (mat[i][j] == 0) {
+                    q.offer(new int[]{i , j});
+                }else{
+                    mat[i][j] = -1;
+                }
+            }
+        }
+        // dry run
+        // i = 0, j = 0: mat[0][0] is 0.
+        // q.offer(new int[]{0, 0}) -> q = [[0,0]]
+        // i = 0, j = 1: mat[0][1] is 1.
+        // mat[0][1] = -1 -> Matrix cell -1 ban gaya.
+        // i = 0, j = 2: mat[0][2] is 0
+        // q.offer(new int[]{0, 2}) -> q = [[0,0], [0,2]]
+        // i = 1, j = 0: mat[1][0] is 1.
+        // mat[1][0] = -1  ________continue_____
+
+        // q = [[0,0], [0,2], [2,0], [2,2]]
+        
+
+        // BFS loop
+        // Directions array setup 2D array
+        int[][]dir = {{0,1},{0,-1},{1,0},{-1,0}};
+
+        // Jab tak queue khaali nahi hoti
+        while (!q.isEmpty()) {
+            // queue ke sabse aage wale element ko nikala mat[0][0] aur uske row aur column ke index ko save kar liya .Yeh hamara current cell hai
+            int[] curr = q.poll();
+            int i = curr[0];
+            int j = curr[1];
+            
+            // now we will calculate all the four direction of the current cell
+            for( int[] d : dir){
+                int ni = i + d[0];
+                int nj = j + d[1];
+            
+
+            // dry run:
+            // let q = {1,1}
+            // d{0,1} -> int ni = i + d[0] = 1 + 0 = 1, int nj = j + d[1] = 1 + 1 = 2 //Right
+            ///d{0,-1} -> int ni = i + d[0] = 1 + 0 = 1, int nj= j + d[1] = 1 = (-1) = 0 // Left same for Top and Down
+            
+            // ab check karenge ki agar neighbour matrix ke boundary ke andar hai ki nahi aur kahi vo -1 hai ki nahi
+                if(ni >= 0 && ni < m && nj >= 0 && nj < n && mat[ni][nj] == -1) {
+                // If ture toh new neighbour cell ki distance +1 kardo by saved i and j index matrix distance
+                    mat[ni][nj] = mat[i][j] + 1;
+            // us neighbour cell ke coordinates ko queue mei daal dete hai to check it later
+                    q.offer(new int[] {ni,nj});
+                }
+
+            }
+        }
+        
+        return mat;
+    }
+}
+
+problem:- https://leetcode.com/problems/01-matrix/
