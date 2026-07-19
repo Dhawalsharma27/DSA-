@@ -1,0 +1,39 @@
+class Solution {
+    // ek helper function banaya jo imput mei image aur i , j , newcolor , original color lega
+    public void dfs(int[][] image, int i , int j , int newColor , int originalColor){
+        // ab check karenge ki :
+        //   i < 0 , j < 0 , i >= image.length , j >= image[0].legnth boundaries se bahar toh nahi hai hum kahi 
+        // image[i][j] == newColor check karega ka ki current pixel ka color new color ke equal toh nahi hai
+        // image[i][j]!= originalColor check karega ki original color jo input mei liye hai jisko change karne hai current pixel us color ke equal hai ki nahi mtlb agar 1 ko change karna hai toh current pixel 1 hona chaiye 
+        // agar yeh conditon true hoti hai toh return kardo null
+        if (i < 0 || j < 0 || i >= image.length || j >= image[0].length || image[i][j] == newColor || image[i][j]!= originalColor){
+            return ;
+        }
+        // nahi toh image ke pixel ko update kardo new color se 
+        image[i][j] = newColor;
+
+        // ab recursion ka use karke check karenge current cell ke charo direction mei move karte hue ki dfs ko aur upadte karte jayenge color ko new color se 
+        //left
+        dfs(image,i,j-1, newColor, originalColor);
+        //right
+        dfs(image,i,j+1,newColor, originalColor);
+        //top
+        dfs(image,i-1,j,newColor, originalColor);
+        //bottom
+        dfs(image,i+1,j,newColor, originalColor);
+    }
+
+    public int[][] floodFill(int[][] image, int sr, int sc, int color) {
+        // base case original color current source row aur source coloumn ke color ke equal hoga
+        int originalColor = image[sr][sc];
+        // agar source pixel new color ke equal nahi hai toh dfs se usko update kardo
+        if (originalColor != color) {
+            dfs(image,sr,sc,color,originalColor);
+        }
+        
+        return image;
+
+    }
+}
+
+problem:- https://leetcode.com/problems/flood-fill/
