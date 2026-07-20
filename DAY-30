@@ -1,0 +1,68 @@
+import java.util.*;
+
+class Solution {
+    public int orangesRotting(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        
+        // Generic type <int[]> define kar rhe hain raw-type warning se bachne ke liye
+        Queue<int[]> q = new LinkedList<>();
+        int freshCount = 0;
+
+        // 1. Initial Scan: Saare pehle se rotten oranges ko Queue me dalo 
+        //    aur fresh oranges ko count karo.
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 2) {
+                    q.offer(new int[]{i, j}); // Rotten orange ki location queue me gayi
+                } else if (grid[i][j] == 1) {
+                    freshCount++; // Fresh orange ka count badhao
+                }
+            }
+        }
+
+        // Agar shuruat me ek bhi fresh orange nahi hai, toh 0 minutes lagenge
+        if (freshCount == 0) return 0;
+
+        int minutes = 0;
+        // 4-directional moves: Up, Down, Left, Right
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+        // 2. BFS Process (Level by Level - minute by minute process hoga)
+        while (!q.isEmpty()) {
+            int size = q.size();
+            boolean rottedInThisMinute = false;
+
+            // Is minute me jitne rotten oranges queue me hain, un sabhi ko ek saath process karo
+            for (int i = 0; i < size; i++) {
+                int[] curr = q.poll();
+
+                // Unke saare 4 adjacent neighbors ko check karo
+                for (int[] dir : directions) {
+                    int newI = curr[0] + dir[0];
+                    int newJ = curr[1] + dir[1];
+
+                    // Check karo ki neighbor grid ke andar hai aur ek fresh orange (1) hai
+                    if (newI >= 0 && newI < m && newJ >= 0 && newJ < n && grid[newI][newJ] == 1) {
+                        grid[newI][newJ] = 2; // Is fresh orange ko rotten mark kar do
+                        freshCount--;         // Fresh orange ka count kam karo
+                        q.offer(new int[]{newI, newJ}); // Agle minute me failane ke liye queue me dalo
+                        rottedInThisMinute = true; // Flag mark karo ki is minute rot hua hai
+                    }
+                }
+            }
+            
+            // Agar is level/minute me kam se kam ek orange kharab hua, tabhi time increment karo
+            if (rottedInThisMinute) {
+                minutes++;
+            }
+        }
+
+        // 3. Result verification
+        // Agar saare fresh oranges rot ho gaye (freshCount == 0), toh total minutes return karo.
+        // Agar koi fresh orange unreachable reh gaya, toh -1 return karo.
+        return freshCount == 0 ? minutes : -1;
+    }
+}
+
+problem:- https://leetcode.com/problems/rotting-oranges/
