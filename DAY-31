@@ -1,0 +1,55 @@
+class Solution {
+    public int numFriendRequests(int[] ages) {
+        // Step 1: Ages ki count (frequency) store karne ke liye array banaya.
+        // Ages sirf 1 se 120 tak ho sakte hain, isliye 121 size ka array kafi hai.
+        int[] count = new int[121];
+        
+        // Input array me jitne bhi log hain, unki age ke count ko increment kar rahe hain.
+        for (int age : ages) {
+            count[age]++; 
+        }
+
+        // Total kitni friend requests bheji gayi, uska count store karne ke liye variable.
+        int totalRequests = 0;
+
+        // Outer Loop: Request bhejne wale person (ageA) ki age check kar rahe hain.
+        // Loop 15 se start kar rahe hain kyunki 14 ya usse chhote log kisi ko request nahi bhej sakte 
+        // (Condition: 0.5 * 14 + 7 = 14, to range banti hai 14 < ageB <= 14 jo impossible hai).
+        for (int ageA = 15; ageA <= 120; ageA++) {
+            
+            // Agar ageA type ka koi person array me hai hi nahi, to skip karo.
+            if (count[ageA] == 0) continue;
+
+            // Inner Loop: Request receive karne wale person (ageB) ki age check kar rahe hain.
+            for (int ageB = 15; ageB <= 120; ageB++) {
+                
+                // Agar ageB type ka koi person nahi hai, to skip karo.
+                if (count[ageB] == 0) continue;
+
+                // Problem conditions ke according valid request check kar rahe hain:
+                // 1. ageB > 0.5 * ageA + 7 (ageB zyada chhota nahi hona chahiye)
+                // 2. ageB <= ageA (ageB bada nahi hona chahiye)
+                if (ageB > 0.5 * ageA + 7 && ageB <= ageA) {
+                    
+                    // Case A: Agar dono ki age same hai (ageA == ageB)
+                    // Same age ke log apas me ek-doosre ko (apne aap ko chhodkar) request bhejenge.
+                    // Agar N log hain, to har banda (N - 1) logon ko request bhejega = N * (N - 1)
+                    if (ageA == ageB) {
+                        totalRequests += count[ageA] * (count[ageA] - 1);
+                    } 
+                    // Case B: Agar dono ki age alag hai (ageA != ageB)
+                    // ageA wale sare log ageB wale sare logon ko request bhejenge.
+                    // Total Requests = (ageA logon ki count) * (ageB logon ki count)
+                    else {
+                        totalRequests += count[ageA] * count[ageB];
+                    }
+                }
+            }
+        }
+
+        // Final total requests return kar do.
+        return totalRequests;
+    }
+}
+
+problem: https://leetcode.com/problems/friends-of-appropriate-ages/
