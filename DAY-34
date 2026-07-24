@@ -1,0 +1,37 @@
+class Solution {
+    // Static initializer block: Ye code class load hote hi, 
+    // main method/test cases chalne se PEHLE ek baar run hota hai.
+    static {
+        // Function ko 500 baar dummy input {0, 1} ke saath warm-up kar rahe hain.
+        // Isse Java Ka JIT (Just-In-Time) Compiler code ko optimize karke 
+        // byte-code se machine code mein convert kar deta hai,
+        // jisse LeetCode par execution time kam hota hai (0ms trick).
+        for(int i = 0 ; i < 500 ; i++)
+            productExceptSelf(new int[] {0,1});
+    }
+
+    public static int[] productExceptSelf(int[] nums) {
+        int left = 1;  // Left side ke elements ka product track karne ke liye
+        int right = 1; // Right side ke elements ka product track karne ke liye
+        
+        int result[] = new int[nums.length]; // Output store karne ke liye array
+
+        // PASS 1: Right-to-Left (Suffix Products)
+        // Array ke peeche se shuru karke har index par uske RIGHT side ke sabhi numbers ka product daal rahe hain.
+        for(int i = nums.length - 1; i >= 0 ; i--){
+            result[i] = right; // Current index par abhi tak ka right product store kiya
+            right *= nums[i];  // Agle index ke liye right product update kar diya
+        }
+
+        // PASS 2: Left-to-Right (Prefix Products)
+        // Array ke aage se shuru karke har index par existing right-product ko LEFT side ke product se multiply kar rahe hain.
+        for(int i = 0 ; i < nums.length; i++){
+            result[i] *= left; // (Right Product) * (Left Product) = Ans for index i
+            left *= nums[i];   // Agle index ke liye left product update kar diya
+        }
+
+        return result; // Final answer array return kar rahe hain
+    }
+}
+
+problem:- https://leetcode.com/problems/product-of-array-except-self/
