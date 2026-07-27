@@ -1,0 +1,69 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+
+    public List<List<Integer>> permute(int[] nums) {
+        // Final output (saare permutations) ko store karne ke liye ek list
+        List<List<Integer>> ans = new ArrayList<>();
+
+        // Helper function ko call kar rahe hain. 
+        // Initial index = 0 se start kar rahe hain.
+        helper(nums, 0, ans);
+
+        return ans;
+    }
+
+    private void helper(int[] nums, int index, List<List<Integer>> ans) {
+        
+        // ==========================================
+        // 1. BASE CASE (Kab rukna hai?)
+        // ==========================================
+        // Jab hamara 'index' array ki length ke barabar ho jata hai,
+        // iska matlab ek poori valid permutation taiyar ho chuki hai.
+        if (index == nums.length) {
+            
+            // Array ke saare elements ko ek naye List mein copy kar rahe hain
+            List<Integer> list = new ArrayList<>();
+            for (int num : nums) {
+                list.add(num);
+            }
+            
+            // Is valid permutation list ko hamare result 'ans' mein add kar do
+            ans.add(list);
+            
+            // Wapas pichhe (backtrack) laut jao
+            return;
+        }
+
+        // ==========================================
+        // 2. RECURSION & BACKTRACKING (Choices)
+        // ==========================================
+        // Loop 'index' se lekar array ke end tak chalega.
+        // Ye loop humein batata hai ki 'index' waali position par kis-kis element ko rakha ja sakta hai.
+        for (int i = index; i < nums.length; i++) {
+
+            // --- STEP A: CHOOSE (Decision Lo) ---
+            // 'i'th element ko 'index' waali position par lane ke liye swap kar do.
+            swap(nums, index, i);
+
+            // --- STEP B: EXPLORE (Aage Badho) ---
+            // Agli position (index + 1) ke liye recursion call karo.
+            helper(nums, index + 1, ans);
+
+            // --- STEP C: UNCHOOSE / BACKTRACK (Wapas Purani State Mein Aao) ---
+            // Array ko uske original position/state mein wapas lane ke liye dubara swap karo.
+            // Taaki agle iteration mein doosre choices/options try kiye ja sakein.
+            swap(nums, index, i);
+        }
+    }
+
+    // Helper method: Array ke do indices (i aur j) ke elements ko aapas mein swap karne ke liye
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+
+problem:- https://leetcode.com/problems/permutations/submissions/2083783788/
