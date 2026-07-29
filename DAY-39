@@ -1,0 +1,47 @@
+import java.util.HashMap;
+import java.util.Map;
+class Solution {
+    public int subarraysWithKDistinct(int[] nums, int k) {
+        return slidingWindow(nums,k) - slidingWindow(nums,k-1);
+    }
+
+    private int slidingWindow(int[] nums, int k) {
+
+        // Generics <Integer, Integer> specify kiya hai taaki Type Safety bani rahe aur compilation error na aaye
+        Map<Integer, Integer> map = new HashMap<>(); 
+    
+        int i = 0; // Left pointer (Window ki starting position)
+        int j = 0; // Right pointer (Window ki ending position)
+        int count = 0; // Distinct elements <= k wale saare subarrays ko store karne ke liye
+
+        // Right pointer 'j' se poore array par iterate karenge
+        while (j < nums.length) {
+            // Element ki frequency map me badhao (agar naya hai to 1 set karo, warna previous + 1)
+            map.put(nums[j], map.getOrDefault(nums[j], 0) + 1);
+            
+            // Agar window me unique elements 'k' se zyada ho jaayein, to window ko shrink karo
+            while (map.size() > k) {
+                // Left pointer 'i' par jo element hai uski frequency ghatayein
+                map.put(nums[i], map.get(nums[i]) - 1);
+                
+                // Agar us element ki count 0 ho jaye, to usko map se bilkul hata do
+                if (map.get(nums[i]) == 0) {
+                    map.remove(nums[i]);
+                }
+                // Left pointer ko aage badhao
+                i++;
+            }
+            
+            // (j - i + 1) current valid window me valid subarrays ki count add karta hai
+            count += (j - i + 1);
+            
+            // Right pointer ko aage badhao next element include karne ke liye
+            j++;
+        }
+        
+        // Total count return karo
+        return count;
+    }
+}
+
+problem:- https://leetcode.com/problems/subarrays-with-k-different-integers/
