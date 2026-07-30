@@ -1,0 +1,30 @@
+import java.util.HashMap;
+class Solution {
+    public int minimumPushes(String word) {
+        HashMap<Integer , Integer> map = new HashMap<>();
+
+        int ans = 0;
+
+        int assignKey = 0; // Index 0 se start kar rahe hain (key 0-7) insted of start index from 2 to 9
+
+        for(char c : word.toCharArray()){
+            if (assignKey > 7){
+                assignKey = 0;
+            }
+            // ab currentcount variable mei map mei check karenge ki assignkey exist karta hai ki nahi agar karta hai toh uske purana currentcount pe +1 nahi toh 0 + 1 karke usko map mei store karnege map.put karke
+            int currentCount = map.getOrDefault(assignKey,0) + 1;
+            map.put(assignKey, currentCount);
+
+            // Ab ans ko update karenge
+            ans += currentCount;
+
+            // assign key ko move karo
+            assignKey++;
+        }
+
+    return ans;
+        
+    }
+}
+
+problem:- https://leetcode.com/problems/minimum-number-of-pushes-to-type-word-i/?envType=daily-question&envId=2026-07-30
