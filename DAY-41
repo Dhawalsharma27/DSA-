@@ -1,0 +1,39 @@
+class Solution {
+    public int romanToInt(String s) {
+        int total = 0;
+        int n = s.length();
+
+        // Step 1: Loop chala kar har character ko process karo
+        for (int i = 0; i < n; i++) {
+            // Helper function 'getValue' se current character ki value lao
+            int current = getValue(s.charAt(i));
+
+            // Step 2: Agar current character agle character se chhota hai,
+            // toh ise ghatao (subtract karo)
+            if (i < n - 1 && current < getValue(s.charAt(i + 1))) {
+                total -= current;
+            } else {
+                // Agar chhota nahi hai, toh normal add kar do
+                total += current;
+            }
+        }
+
+        return total;
+    }
+
+    // Fast look-up function: Switch-case HashMap se kaafi fast hota hai
+    private int getValue(char ch) {
+        switch (ch) {
+            case 'I': return 1;
+            case 'V': return 5;
+            case 'X': return 10;
+            case 'L': return 50;
+            case 'C': return 100;
+            case 'D': return 500;
+            case 'M': return 1000;
+            default: return 0;
+        }
+    }
+}
+
+problem:-https://leetcode.com/problems/roman-to-integer/
