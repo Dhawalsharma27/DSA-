@@ -1,0 +1,55 @@
+class Solution {
+    public int longestPalindromeSubseq(String s) {
+        // String ko char array me convert kiya taaki charAt() ki jagah faster indexing ho sake
+        char[] chars = s.toCharArray();
+        int n = chars.length;
+        
+        // 1D DP Array: dp[j] ab represent karega substring s[i...j] ki longest palindromic subsequence
+        int[] dp = new int[n];
+        
+        // Piche se start kar rahe hain (i = n-1 to 0) taaki dp[i+1] wale results pehle se available hon
+        for (int i = n - 1; i >= 0; i--) {
+            
+            // Base Case: s[i...i] (single character) humesha 1 length ka palindrome hota hai
+            dp[i] = 1;
+            
+            // prev variable 2D DP ke diagonal element i.e., dp[i+1][j-1] ka kaam karega
+            int prev = 0;
+            
+            char c = chars[i]; // Outer loop ka current character
+            
+            // j pointer forward chalega (i+1 se n-1 tak)
+            for (int j = i + 1; j < n; j++) {
+                
+                // temp me dp[j] ko save kar lete hain. 
+                // Kyunki agle iteration (j+1) me, yeh purana dp[j] hi hamara 'prev' (diagonal) banega.
+                int temp = dp[j];
+                
+                // Case 1: Agar start character (c) aur end character (chars[j]) match kar gaye
+                if (c == chars[j]) {
+                    // Match ho gaya! Palindrome length = diagonal result (prev) + 2
+                    dp[j] = prev + 2;
+                } 
+                // Case 2: Mismatch hone par
+                else {
+                    // left represent karta hai dp[i][j-1] ko
+                    int left = dp[j - 1];
+                    
+                    // Equivalent to: dp[j] = Math.max(dp[j], left)
+                    // (Yahan dp[j] abhi dp[i+1][j] ko represent kar raha hai jo niche se aaya hai)
+                    if (left > dp[j]) {
+                        dp[j] = left;
+                    }
+                }
+                
+                // Agle loop ke liye 'prev' ko update kar diya (jo purana dp[j] tha)
+                prev = temp;
+            }
+        }
+        
+        // Entire string s[0...n-1] ka final answer dp[n-1] me store hoga
+        return dp[n - 1];
+    }
+}
+
+problem:- https://leetcode.com/problems/longest-palindromic-subsequence/
