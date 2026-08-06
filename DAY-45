@@ -1,0 +1,40 @@
+import java.util.Arrays;
+
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        // Upper bound set kar rahe hain (amount + 1 ek impossible value hai kyunki maximum coins 'amount' se zyada nahi ho sakte)
+        int maxSum = amount + 1;
+        
+        // dp[i] store karega ki 'i' amount banane ke liye minimum kitne coins chahiye
+        int[] dp = new int[maxSum];
+        
+        // Array ko ek bade number (maxSum) se fill kar rahe hain to represent "infinity" / unreachable state
+        Arrays.fill(dp, maxSum);
+        
+        // Base Case: Amount 0 banane ke liye 0 coins ki zaroorat hoti hai
+        dp[0] = 0;
+
+        // Outer loop: Har ek amount 'i' ko 1 se leke target 'amount' tak build karenge
+        for (int i = 1; i <= amount; i++) {
+            
+            // Inner loop: Har ek available coin ko check karenge
+            for (int coin : coins) {
+                
+                // Agar current coin ki value current amount 'i' se choti ya barabar hai, tabhi use use kar sakte hain
+                if (coin <= i) {
+                    
+                    // Option 1: Abhi tak ka minimum dp[i]
+                    // Option 2: Current coin use karo (1) + baaki bache amount (i - coin) ke liye minimum coins
+                    // Dono me se jo minimum hoga, wo dp[i] me store ho jayega
+                    dp[i] = Math.min(dp[i], 1 + dp[i - coin]);
+                }
+            }
+        }
+
+        // Agar dp[amount] abhi bhi maxSum hai, matlab ye amount bana pana impossible hai (-1 return karo)
+        // Otherwise, answer dp[amount] return kar do
+        return dp[amount] == maxSum ? -1 : dp[amount];
+    }
+}
+
+problem :- https://leetcode.com/problems/coin-change/
