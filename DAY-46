@@ -1,0 +1,56 @@
+public class Solution {
+    public int myAtoi(String s) {
+        // Step 1: Base Condition Check
+        // Agar string null hai ya uski length 0 hai, toh seedha 0 return kar do.
+        if (s == null || s.length() == 0) return 0;
+
+        // Step 2: Trim Whitespaces
+        // String ke shuruat aur aakhir ke saare extra spaces (whitespaces) hata do.
+        s = s.trim();
+        
+        // Agar spaces hatane ke baad string empty ho gayi, toh 0 return kar do.
+        if (s.isEmpty()) return 0;
+
+        // Step 3: Variables Initialization
+        // Default sign ko positive (+1) rakho aur index ko 0 se start karo.
+        int sign = 1;
+        int index = 0;
+
+        // Step 4: Handle Sign (+ ya -)
+        // Check karo ki pehla character minus '-' hai ya nahi.
+        if (s.charAt(0) == '-') {
+            sign = -1;  // Sign ko negative (-1) set karo
+            index++;    // Next character par jaane ke liye index 1 aage badhao
+        } else if (s.charAt(0) == '+') {
+            index++;    // Agar '+' symbol hai toh sign default positive hi rahega, bas index 1 aage badhao
+        }
+
+        // Numbers ko convert karke store karne ke liye long variable (taaki overflow easily check ho sake)
+        long num = 0;
+
+        // Step 5: Convert String to Integer
+        // Tab tak loop chalao jab tak string khatam na ho jaye aur current character ek digit (0-9) ho.
+        while (index < s.length() && Character.isDigit(s.charAt(index))) {
+            
+            // Previous number ko 10 se multiply karke naya digit add karo
+            // Example: '4' - '0' = 4, '2' - '0' = 2
+            num = num * 10 + (s.charAt(index) - '0');
+
+            // Step 6: Handle 32-bit Integer Overflow/Underflow
+            // Agar positive value Integer.MAX_VALUE (2147483647) se badi ho jaye, toh Max value return karo.
+            if (num * sign > Integer.MAX_VALUE) return Integer.MAX_VALUE;
+            
+            // Agar negative value Integer.MIN_VALUE (-2147483648) se choti ho jaye, toh Min value return karo.
+            if (num * sign < Integer.MIN_VALUE) return Integer.MIN_VALUE;
+
+            // Next digit process karne ke liye index ko aage badhao
+            index++;
+        }
+
+        // Step 7: Final Result Return
+        // Number ko uske sign se multiply karke int type mein cast karke return kar do.
+        return (int) (num * sign);
+    }
+}
+
+problem:- https://leetcode.com/problems/string-to-integer-atoi/
