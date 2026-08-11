@@ -1,0 +1,33 @@
+class Solution {
+    public boolean isPalindrome(int x) {
+        // 1. Agar number negative (< 0) hai, toh woh kabhi palindrome nahi ho sakta.
+        // Kyunki '-' sign starting me hota hai, par reverse karne par last me chala jata hai (e.g., -121 -> 121-).
+        if (x < 0) return false;
+
+        // 2. Original number ko ek variable 'original' me store kar rahe hain.
+        // Kyunki aage loop me 'x' ki value change hoke 0 ho jayegi, isliye baad me comparison ke liye backup rakhna zaroori hai.
+        int original = x;
+
+        // 3. Reverse number build karne ke liye 'reversed' variable ko 0 se initialize karte hain.
+        int reversed = 0;
+
+        // 4. Jab tak 'x' ki value 0 nahi ho jati, tab tak loop chalega.
+        while (x != 0) {
+            // 5. 'x % 10' karke hum integer ki aakhri digit (last digit) nikalte hain.
+            // Example: 121 % 10 = 1
+            int digit = x % 10;
+
+            // 6. Pehle wale 'reversed' ko 10 se multiply karke place value shifted karte hain aur usme 'digit' add kar dete hain.
+            reversed = (reversed * 10) + digit;
+
+            // 7. Last digit ko hataane ke liye 'x' ko 10 se divide kar dete hain.
+            // Example: 121 / 10 = 12
+            x /= 10;
+        }
+
+        // 8. Agar original number aur reversed number exact same hain, toh return true hoga, warna return false.
+        return original == reversed;
+    }
+}
+
+problem:- https://leetcode.com/problems/palindrome-number/
