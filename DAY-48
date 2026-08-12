@@ -1,0 +1,63 @@
+class Solution {
+    // 2D Matrix (Table) memoization ke liye taaki repeat hone wale sub-problems ko dubara calculate na karna pade.
+    // t[i][j] represent karta hai ki s.substring(i) aur p.substring(j) match karte hain ya nahi.
+    int[][] t;
+
+    public boolean isMatch(String s, String p) {
+        int m = s.length(); // String 's' ki length store kar rahe hain.
+        int n = p.length(); // Pattern 'p' ki length store kar rahe hain.
+
+        // Memoization table initialize kar rahe hain with size (m + 1) x (n + 1).
+        // +1 isliye kyunki hum base cases (jab string ya pattern empty ho jaye) ko bhi handle kar rahe hain.
+        t = new int[m + 1][n + 1];
+
+        // Puri table ko -1 se fill kar rahe hain.
+        // -1 ka matlab hai: "Is (i, j) state ka result abhi tak calculate nahi hua hai".
+        for (int i = 0; i <= m; i++)
+            for (int j = 0; j <= n; j++)
+                t[i][j] = -1;
+
+        // Recursive helper function ko start kar rahe hain index i = 0 (string ke liye) aur j = 0 (pattern ke liye).
+        return solve(0, 0, s, p);
+    }
+
+    private boolean solve(int i, int j, String s, String p) {
+        // Base Case 1: Agar pattern pura khatam ho gaya (j == p.length()),
+        // toh hum tabhi match bolenge agar string 's' bhi puri khatam ho chuki hai (i == s.length()).
+        if (j == p.length()) return i == s.length();
+
+        // Memoization Check: Agar humne is (i, j) combination ko pehle calculate kar liya hai,
+        // toh direct cached result return kar do (1 ka matlab true, 0 ka matlab false).
+        if (t[i][j] != -1) return t[i][j] == 1;
+
+        // First Match Check: Check karo ki current character match kar raha hai ya nahi.
+        // Match tabhi true hoga jab:
+        // 1. String khatam na hui ho (i < s.length())
+        // 2. AND (Pattern ka char aur String ka char same ho OR Pattern mein '.' ho jo kisi bhi single char ko match kar leta hai).
+        boolean first_match = (i < s.length() && (p.charAt(j) == s.charAt(i) || p.charAt(j) == '.'));
+
+        boolean ans;
+
+        // Case 1: Agar pattern ka agla character '*' hai (e.g., "a*" ya ".*")
+        if (j + 1 < p.length() && p.charAt(j + 1) == '*') {
+            // '*' ke pass 2 options hote hain:
+            // Option 1: '*' aur uske piche wale character ko ZERO occurrences ke tarah treat karo -> solve(i, j + 2, s, p)
+            // Option 2: Agar first_match true hai, toh '*' ko Kam se kam EK occurrence ki tarah treat karo -> solve(i + 1, j, s, p)
+            ans = (solve(i, j + 2, s, p) || (first_match && solve(i + 1, j, s, p)));
+        } 
+        // Case 2: Agar agla character '*' nahi hai (Normal matching)
+        else {
+            // Normal character match hona chahiye (first_match) aur baaki bachi hui string/pattern bhi match honi chahiye -> solve(i + 1, j + 1, s, p)
+            ans = first_match && solve(i + 1, j + 1, s, p);
+        }
+
+        // Memoization Store: Calculated answer ko DP table mein save kar rahe hain.
+        // true hone par 1 store hoga, false hone par 0.
+        t[i][j] = ans ? 1 : 0;
+
+        // Result return kar do.
+        return ans;
+    }
+}
+
+problem:- https://leetcode.com/problems/regular-expression-matching/
