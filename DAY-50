@@ -1,0 +1,59 @@
+import java.util.Arrays;
+
+public class Solution {
+    public int threeSumClosest(int[] nums, int target) {
+        
+        // Step 1: Array ko sort kar rahe hain. 
+        // Sorting bohot zaroori hai taaki hum two-pointer approach use kar sakein.
+        // Sorted array mein hum easily decide kar sakte hain ki sum badhana hai ya kam karna hai.
+        Arrays.sort(nums); 
+        
+        // Shuruwat mein pehle teen elements ke sum ko hi 'closestSum' maan lete hain.
+        // Ye hamara starting reference point hoga jisko hum aage compare karenge.
+        int closestSum = nums[0] + nums[1] + nums[2];
+
+        // Step 2: Ek loop lagate hain ek number ko fix karne ke liye.
+        // Loop (nums.length - 2) tak chalega kyunki hume triplet (3 numbers) chahiye.
+        // Toh aage kam se kam 2 numbers bache hone chahiye left aur right pointers ke liye.
+        for (int i = 0; i < nums.length - 2; i++) {
+            
+            // Fixed element ke just agla element 'left' pointer hoga.
+            int left = i + 1;
+            // Array ka sabse aakhiri element 'right' pointer hoga.
+            int right = nums.length - 1;
+
+            // Jab tak left aur right pointers aapas mein cross nahi karte, tab tak check karenge.
+            while (left < right) {
+                // Teeno elements ka current sum calculate karte hain.
+                int currentSum = nums[i] + nums[left] + nums[right];
+
+                // Check karte hain ki kya ye naya 'currentSum' hamare pichle 'closestSum' se zyada target ke paas hai?
+                // Math.abs() difference ki positive value nikalta hai (distance check karne ke liye).
+                if (Math.abs(target - currentSum) < Math.abs(target - closestSum)) {
+                    // Agar currentSum zyada paas hai, toh closestSum ko update kar do.
+                    closestSum = currentSum;
+                }
+
+                // Ab pointers ko move karne ki baari:
+                if (currentSum < target) {
+                    // Agar sum target se chhota hai, toh hume sum badhana padega.
+                    // Kyunki array sorted hai, 'left' pointer ko right mein khiskane (left++) se sum badhega.
+                    left++;
+                } else if (currentSum > target) {
+                    // Agar sum target se bada hai, toh hume sum kam karna padega.
+                    // 'right' pointer ko left mein khiskane (right--) se sum kam hoga.
+                    right--;
+                } else {
+                    // Agar currentSum bilkul target ke barabar mil gaya, toh isse close kuch ho hi nahi sakta!
+                    // Sidha yahi sum return kar do bina aage loop chalaye.
+                    return currentSum; 
+                }
+            }
+        }
+        
+        // Pura array check karne ke baad jo sabse closest sum record hua tha, wo return kar do.
+        return closestSum;
+    }
+}
+
+problem:- https://leetcode.com/problems/3sum-closest/?envType=problem-list-v2&envId=array
