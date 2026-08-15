@@ -1,0 +1,31 @@
+class Solution {
+    public int longestSubsequence(int[] nums) {
+        // initialize a variable to store the length of the result
+        int resultxor = 0;
+        // to check whether all the element are zero or not we will initialize a variable that will keep a mark 
+        boolean allzero = true;
+        // iterate through the array 
+        for (int num : nums){
+            // calculate the xor of the array 
+            resultxor = ( resultxor ^ num );
+            // after that check whether the array elements are zero or not if not then mark the allzero as false 
+            if( num != 0) {
+                allzero = false;
+            }
+
+
+        }
+        // if yes then allzero variable will remain true and will return 0
+        if (allzero) {
+            return 0;
+        }
+
+        // else return by cheecking that that the xor is 0 or not if 0 then return nums.length - 1 else return nums.length
+        return (resultxor == 0) ? nums.length - 1 : nums.length;
+
+
+        
+    }
+}
+
+problem:- https://leetcode.com/problems/longest-subsequence-with-non-zero-bitwise-xor/?envType=daily-question&envId=2026-08-15
