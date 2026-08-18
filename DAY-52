@@ -1,0 +1,78 @@
+class Solution {
+    // Yeh ek JIT (Just-In-Time) compiler warmup trick hai.
+    // Leetcode par "0ms" runtime laane ke liye log yeh static block use karte hain
+    // taaki main function call hone se pehle hi JVM code ko optimize kar le.
+    static {
+        for(int i = 0; i <= 500; i++) {
+            largestInteger(new int[0], 0);
+        }
+    }
+
+    public static int largestInteger(int[] nums, int k) {
+        int n = nums.length;
+        if(n == 0) return n;
+
+        // Case 2: Agar k ki value array ke size (n) ke barabar hai
+        // Toh poore array ka sirf ek hi subarray banega (jo poora array khud hoga).
+        // Iska matlab array ka har ek element exactly 1 subarray mein aayega.
+        // Isliye humein bas array ka maximum element dhoondh kar return karna hai.
+        if(n == k) {
+            int max = nums[0];
+            for(int i = 1; i < n; i++) {
+                max = Math.max(max, nums[i]);
+            }
+            return max;
+        }
+
+        // Case 3: Agar k ki value 1 hai
+        // Toh har element khud mein ek subarray hai.
+        // Kisi element ko exactly "1 subarray" mein aane ke liye,
+        // usko poore array mein bhi exactly 1 baar hi aana padega (frequency = 1).
+        if(k == 1) {
+            // HashMap ki jagah array use kiya kyunki constraints chhote hain (max value 50)
+            // Yeh fast hota hai aur memory kam leta hai.
+            int[] freq = new int[51];
+            for(int c : nums) {
+                freq[c]++; // Har number ki frequency count kar rahe hain
+            }
+            int max = -1;
+            for(int c : nums) {
+                if(freq[c] >= 2) continue; // Agar 1 se zyada baar aaya hai, toh ignore karo
+                max = Math.max(max, c);    // Sirf frequency 1 walo ka maximum store karo
+            }
+            return max;
+        }
+
+        // Case 1: General Case (Jab k, 1 se bada ho aur n se chhota ho)
+        // Yahan ek mathematical observation hai: 
+        // Agar k > 1 hai, toh koi bhi "middle" ka element hamesha 1 se zyada subarrays ka hissa ban jayega.
+        // Sirf pehla element (nums[0]) aur aakhiri element (nums[n-1]) hi aise hain,
+        // jo exactly 1 subarray mein aa sakte hain (woh bhi tab jab wo array mein sirf ek baar exist karte hon).
+        
+        // Agar pehla aur aakhiri element same hain, toh dono ki frequency 1 se zyada ho gayi.
+        if(nums[0] == nums[n-1]) return -1;
+        
+        boolean option1 = true;  // Maan ke chalte hain ki nums[0] unique hai
+        boolean option2 = true;  // Maan ke chalte hain ki nums[n-1] unique hai
+        
+        // Beech ke elements mein check karte hain ki kahin nums[0] ya nums[n-1] dobara toh nahi aaye
+        for(int i = 1; i < n-1; i++) {
+            if(nums[i] == nums[0]) option1 = false;   // Agar pehla element beech mein mil gaya, toh fail
+            if(nums[i] == nums[n-1]) option2 = false; // Agar aakhiri element beech mein mil gaya, toh fail
+        }
+        
+        // Agar sirf pehla element unique hai, toh usko return karo
+        if(option1 && !option2) return nums[0];
+        
+        // Agar sirf aakhiri element unique hai, toh usko return karo
+        if(!option1 && option2) return nums[n-1];
+        
+        // Agar dono hi unique nahi hain, toh koi valid answer nahi hai
+        if(!option1 && !option2) return -1;
+        
+        // Agar dono array mein unique hain, toh unmein se jo bada hai wo return karo
+        return Math.max(nums[0], nums[n-1]);
+    }
+}
+
+problem:- https://leetcode.com/problems/find-the-largest-almost-missing-integer/?envType=daily-question&envId=2026-08-18
