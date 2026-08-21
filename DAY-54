@@ -1,0 +1,111 @@
+class Solution {
+
+    public long findKthSmallest(int[] coins, int k) {
+        // STEP 1: FALTU COINS KO REMOVE KARNA
+        Arrays.sort(coins); // Sabse chhota coin pehle aaye isliye sort kiya
+        List<Integer> newCoins = new ArrayList<>();
+        
+        for (int x : coins) {
+            boolean flag = true;
+            // Check karte hain kya current coin 'x' purane kisi coin 'y' ka multiple hai?
+            for (int y : newCoins) {
+                if (x % y == 0) {
+                    flag = false; // Agar divisible hai, toh yeh coin useless hai, isko ignore karo
+                    break;
+                }
+            }
+            if (flag) {
+                newCoins.add(x); // Agar kisi se divisible nahi hai, toh array mein add karo
+            }
+        }
+        
+        // Naye filtered List ko wapas int array mein convert kar liya
+        coins = newCoins
+            .stream()
+            .mapToInt(i -> i)
+            .toArray();
+
+        int n = coins.length;
+        int m = 1 << n; // Total subsets (2^n)
+        
+        // STEP 2: PRECOMPUTATION (Taaki baad mein time bache)
+        int[] bitCount = new int[m]; // Har mask mein kitne set bits (1s) hain
+        long[] lcm = new long[m];    // Har mask wale subset ka overall LCM
+        
+        // Range for Binary Search
+        long l = k; // Minimum possible answer 'k' ho sakta hai
+        long r = (long) coins[0] * k + 1; // Maximum answer jab sabse chhota coin k times lein
+
+        // DP se har mask ke number of set bits (1s) count kar rahe hain
+        for (int mask = 1; mask < m; mask++) {
+            bitCount[mask] = bitCount[mask >> 1] + (mask & 1);
+        }
+
+        lcm[0] = 1; // Khali subset ka LCM 1 maan rahe hain calculation ke liye
+        
+        // Har ek subset (mask) ke liye LCM calculate karke store kar rahe hain
+        for (int mask = 1; mask < m; mask++) {
+            // preMask ka matlab hai current mask se uski rightmost bit (1) hata dena
+            int preMask = mask & (mask - 1); 
+            // i hume batayega ki kaunsa naya coin add hua hai is mask mein
+            int i = Integer.numberOfTrailingZeros(mask);
+
+            // Naya LCM nikalne ka formula: LCM(a, b) = a / GCD(a,b) * b
+            // Yahan 'a' = purana LCM (lcm[preMask]) aur 'b' = naya coin (coins[i])
+            long tmp = lcm[preMask] / gcd(lcm[preMask], coins[i]);
+            
+            // Overflow se bachne ke liye check kar rahe hain
+            if (tmp <= r / coins[i]) {
+                lcm[mask] = tmp * coins[i]; // LCM valid range mein hai
+            } else {
+                lcm[mask] = r + 1; // LCM range se bahar chala gaya, isko max set kar do
+            }
+        }
+
+        // STEP 3: BINARY SEARCH
+        while (l < r) {
+            long x = l + (r - l) / 2; // Mid value find ki
+            
+            // count() function batayega ki 'x' tak in coins ke kitne multiples hain
+            if (count(x, m, lcm, bitCount) >= k) {
+                r = x; // Agar count zyada ya equal hai, toh chota answer try karo
+            } else {
+                l = x + 1; // Agar count kam hai, toh bada number chahiye
+            }
+        }
+        return l; // l hi hamara answer hoga
+    }
+
+    // STEP 4: INCLUSION-EXCLUSION PRINCIPLE (PIE)
+    // Ye function count karta hai ki 'x' tak kitne unique multiples banenge
+    private long count(long x, int m, long[] lcm, int[] bitCount) {
+        long res = 0;
+        
+        for (int mask = 1; mask < m; mask++) {
+            // Agar kisi subset ka LCM hi limit 'x' se bada hai, toh uske multiples 0 honge
+            if (lcm[mask] > x) continue;
+
+            // Agar number of coins (set bits) odd (1, 3, 5..) hain, toh ADD (+) karna hai
+            if ((bitCount[mask] & 1) == 1) {
+                res += x / lcm[mask];
+            } 
+            // Agar number of coins even (2, 4, 6..) hain, toh SUBTRACT (-) karna hai
+            else {
+                res -= x / lcm[mask];
+            }
+        }
+        return res;
+    }
+
+    // Standard Euclidean algorithm to find Greatest Common Divisor (HCF)
+    private long gcd(long a, long b) {
+        while (b != 0) {
+            long t = b;
+            b = a % b;
+            a = t;
+        }
+        return a;
+    }
+}
+
+problem:- https://leetcode.com/problems/kth-smallest-amount-with-single-denomination-combination/?envType=daily-question&envId=2026-08-21
