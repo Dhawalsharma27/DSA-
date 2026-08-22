@@ -1,0 +1,22 @@
+class Solution {
+    public boolean checkDivisibility(int n) {
+        // initalize sum and product as 0 and 1
+        int sum = 0;
+        int product = 1;
+        // a variable is equal to n
+        int temp = n;
+        // jab tak temp > 0
+        while(temp > 0 ) {
+            // sum mei add kardo temp ka last int
+            sum += temp % 10;
+            // product mei multiply kardo temp ka last digit
+            product *= temp% 10;
+            // aur temp ko update karke last element hata do
+            temp /= 10;
+        }
+        // agar n divide hoke 0 remainder chorddta hai summ + product se toh  true nahi toh false
+        return n % (sum + product) == 0;
+    }
+}
+
+problem:- https://leetcode.com/problems/check-divisibility-by-digit-sum-and-product/?envType=daily-question&envId=2026-08-22
