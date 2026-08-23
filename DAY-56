@@ -1,0 +1,43 @@
+class Solution {
+    public boolean sumGame(String num) {
+        int n = num.length();
+        // to track the number of question mark
+        int quesDiff = 0;
+        // to track the sum of left - sum of right so to get idea how much more needed to turn it equal
+        int sumDiff = 0;
+
+        for( int i = 0 ; i < n /2 ; i++) {
+            // agar character at i index ? hai toh count of quesDiff badha do
+            if(num.charAt(i) == '?') {
+                quesDiff++ ;
+            // nahi toh jo i index pe number hai usko add kardo sumDiff mei
+            } else {
+                // we are subtracting ascii code of i from 0 to get extact value to be added as character are stored as ascii integer value
+                sumDiff += num.charAt(i) - '0';
+            }
+        }
+        // ab n/2 se quesDiff means turn ko cancel karte jayenge taki last mei kitne turn bache vo pata chale aur total sum mei se num(i) ko subtract karte jayenge to get how much more needed ko equalize sum
+        for ( int i = n / 2 ; i < n; i++) {
+             if(num.charAt(i) == '?') {
+                quesDiff-- ;
+             } else {
+                sumDiff -= num.charAt(i) - '0';
+             }
+        }
+        // agar number of turn that is ? is odd means last move is of alice so he will never make it happen the left and right sum equal so he will win
+        if (quesDiff % 2 != 0) {
+            return true;
+        }
+        // agar quesDiff / 2 which the number of turn the bob will work with 
+        // because bob can force every pair of ? to sum to 9 
+        // != 0 because we have return false if bob win
+        return sumDiff + 9 * (quesDiff / 2) != 0;
+
+
+
+    }
+}
+
+problem:- https://leetcode.com/problems/sum-game/?envType=daily-question&envId=2026-08-23
+
+
