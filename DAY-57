@@ -1,0 +1,22 @@
+import java.util.HashSet;
+class Solution {
+    public int missingMultiple(int[] nums, int k) {
+        HashSet<Integer> Set = new HashSet<>();
+        // first we will check if there is any number in the array that is fully divisible by k add them to HashSet
+        for( int i = 0; i < nums.length; i++) {
+            if(nums[i] % k == 0){
+                Set.add(nums[i]);
+            }
+        }
+        // now initialize the variable as k which is the smallest multiple of it self
+        int multiple = k;
+        // now check if it contain that number or not if contain then increase the variable by k like k,2k,3k,4k if it contains and if not then return the variable
+        while(Set.contains(multiple)){
+            multiple += k;
+        }
+
+        return multiple;
+    }
+}
+
+problem :- https://leetcode.com/problems/smallest-missing-multiple-of-k/?envType=daily-question&envId=2026-08-25
