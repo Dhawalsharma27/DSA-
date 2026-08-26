@@ -1,0 +1,72 @@
+public class Solution {
+
+    public String shortestBeautifulSubstring(String s, int k) {
+        // String ko character array mein convert kar rahe hain fast access ke liye
+        char[] input = s.toCharArray();
+
+        // head aur tail humari sabse best (shortest aur lexicographically smallest) 
+        // substring ke end aur start indices ko store karenge. 
+        // Initial value -1 rakhi hai matlab abhi tak koi aisi substring nahi mili.
+        int head = -1;
+        int tail = -1;
+
+        // back humara sliding window ka starting pointer hai
+        int back = 0;
+        // countOnes track karega ki current window mein kitne '1' hain
+        int countOnes = 0;
+
+        // front pointer ko array ke end tak move karenge (window ko expand karne ke liye)
+        for (int front = 0; front < input.length; ++front) {
+            
+            // Current character ko integer value mein convert karke add kar rahe hain.
+            // Agar '1' hai toh countOnes 1 se badhega, '0' hai toh 0 add hoga.
+            countOnes += input[front] - '0';
+            
+            // Jab tak current window mein exactly 'k' ones nahi ho jaate, 
+            // tab tak aage badhte raho
+            if (countOnes < k) {
+                continue;
+            }
+
+            // Jab 'k' ones mil jayein, toh check karo ki window ke start (back) par extra '0's toh nahi hain?
+            // Agar hain, toh unko hata do kyunki humein SHORTEST substring chahiye.
+            // Piche se '0' hatane se 1s ka count kam nahi hoga par length choti ho jayegi.
+            while (back < front && input[back] == '0') {
+                countOnes -= input[back] - '0';
+                ++back; // window ko aage se shrink karo
+            }
+
+            // Yahan do conditions hain:
+            // 1. Agar head == -1 hai, matlab yeh pehli baar k ones wali substring mili hai.
+            // 2. Agar current window ka size (front - back + 1) purani best window (head - tail + 1) se chota hai.
+            // Agar inmein se kuch bhi true hai, toh best window ke indices update kar do.
+            if (head == -1 || head - tail + 1 > front - back + 1) {
+                head = front;
+                tail = back;
+            } 
+            // Agar nayi window ka size purani best window ke size ke bilkul barabar hai,
+            // toh humein lexicographically smallest (jo dictionary mein pehle aaye) choose karni hai.
+            else if (head - tail + 1 == front - back + 1
+                    && s.substring(tail, head + 1).compareTo(s.substring(back, front + 1)) > 0) {
+                // Agar purani substring (tail to head) nayi wali (back to front) se badi hai,
+                // toh nayi wali ko best maan lo aur indices update kar do.
+                head = front;
+                tail = back;
+            }
+            
+            // Ab agli possible answer dhoondhne ke liye current window ke starting 
+            // character ko nikal do. Agar shuru mein '1' hoga toh nikal jayega aur 
+            // loop next '1' dhoondhne ke liye aage chalega.
+            while (back < front && countOnes == k) {
+                countOnes -= input[back] - '0';
+                ++back;
+            }
+        }
+        
+        // Agar head change hua (matlab koi valid substring mili), toh usey return karo,
+        // varna (agar k ones mile hi nahi poori string mein) empty string return kar do.
+        return head != -1 ? s.substring(tail, head + 1) : "";
+    }
+}
+
+problem:- https://leetcode.com/problems/shortest-and-lexicographically-smallest-beautiful-string/?envType=daily-question&envId=2026-08-26
