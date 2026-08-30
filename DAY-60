@@ -1,0 +1,27 @@
+import java.util.*;
+class Solution {
+    public int minimumDeletions(int[] nums) {
+        // first initialize min and max
+        int n = nums.length;
+        int minIdx = 0; int maxIdx = 0; 
+        // find min and max element of the array
+        for(int i = 0; i < n; i ++) {
+            if(nums[i] < nums[minIdx]) minIdx = i;
+            if(nums[i] > nums[maxIdx]) maxIdx = i;
+        }
+        // initialize left as the min index of (max, min) and right as the max index of (min ,max)
+        int left = Math.min(minIdx,maxIdx);
+        int right = Math.max(minIdx,maxIdx);
+        // there are three options ya toh ek ko left aur ek ko right se nikalo 
+        int option1 = (left + 1) + (n - right);
+        // dono ko left se nikal do
+        int option2 = right + 1;
+        // dono ko right se nikal do
+        int option3 = n - left;
+        // ab teeno mei jo sabse minimum step hai usko return kardo
+        return Math.min(option1 , Math.min(option2, option3));
+        
+    }
+}
+
+problem :- https://leetcode.com/problems/removing-minimum-and-maximum-from-array/?envType=daily-question&envId=2026-08-30
