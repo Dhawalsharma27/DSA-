@@ -1,0 +1,61 @@
+/**
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public int[] nodesBetweenCriticalPoints(ListNode head) {
+        // A minimum of 3 nodes is required to have any critical points
+        if (head == null || head.next == null || head.next.next == null) {
+            return new int[]{-1, -1};
+        }
+
+        int firstCritical = -1;
+        int lastCritical = -1;
+        int minDistance = Integer.MAX_VALUE;
+
+        ListNode prev = head;
+        ListNode curr = head.next;
+        int currentIndex = 1;
+
+        while (curr.next != null) {
+            ListNode nextNode = curr.next;
+            
+            // Check if the current node is a local maxima or local minima
+            if ((curr.val > prev.val && curr.val > nextNode.val) || 
+                (curr.val < prev.val && curr.val < nextNode.val)) {
+                
+                if (firstCritical == -1) {
+                    // Record the very first critical point found
+                    firstCritical = currentIndex;
+                } else {
+                    // Update the minimum distance using the previous critical point
+                    minDistance = Math.min(minDistance, currentIndex - lastCritical);
+                }
+                // Update the last known critical point to the current one
+                lastCritical = currentIndex;
+            }
+            
+            // Move pointers forward
+            prev = curr;
+            curr = nextNode;
+            currentIndex++;
+        }
+
+        // If less than 2 critical points were found
+        if (firstCritical == -1 || firstCritical == lastCritical) {
+            return new int[]{-1, -1};
+        }
+
+        // maxDistance is from the first to the last critical point
+        int maxDistance = lastCritical - firstCritical;
+        
+        return new int[]{minDistance, maxDistance};
+    }
+}
+
+problem:- https://leetcode.com/problems/find-the-minimum-and-maximum-number-of-nodes-between-critical-points/?envType=daily-question&envId=2026-08-31
