@@ -1,0 +1,102 @@
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Arrays;
+
+class Solution {
+    public int minMoves(String[] classroom, int energy) {
+        int m = classroom.length;
+        int n = classroom[0].length();
+        
+        int startX = -1, startY = -1;
+        int litterCount = 0;
+        int[][] litterIdx = new int[m][n];
+        
+        // Step 1: Find starting position and index the litter items
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                char c = classroom[i].charAt(j);
+                if (c == 'S') {
+                    startX = i;
+                    startY = j;
+                } else if (c == 'L') {
+                    litterIdx[i][j] = litterCount++;
+                }
+            }
+        }
+        
+        // Target mask represents all bits set to 1 for our litter items
+        int targetMask = (1 << litterCount) - 1;
+        if (targetMask == 0) return 0; // Edge case: No litter to clean
+        
+        // 3D array to store the maximum energy observed at [x][y][mask]
+        int[][][] bestEnergy = new int[m][n][1 << litterCount];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                Arrays.fill(bestEnergy[i][j], -1);
+            }
+        }
+        
+        // Queue stores states as: {x, y, mask, current_energy}
+        Queue<int[]> q = new LinkedList<>();
+        q.offer(new int[]{startX, startY, 0, energy});
+        bestEnergy[startX][startY][0] = energy;
+        
+        int[] dx = {-1, 1, 0, 0};
+        int[] dy = {0, 0, -1, 1};
+        
+        int steps = 0;
+        
+        // Step 2: BFS Traversal
+        while (!q.isEmpty()) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                int[] curr = q.poll();
+                int x = curr[0];
+                int y = curr[1];
+                int mask = curr[2];
+                int e = curr[3];
+                
+                // Explore neighbors
+                for (int d = 0; d < 4; d++) {
+                    int nx = x + dx[d];
+                    int ny = y + dy[d];
+                    
+                    // Check bounds
+                    if (nx >= 0 && nx < m && ny >= 0 && ny < n) {
+                        char nc = classroom[nx].charAt(ny);
+                        
+                        if (nc == 'X') continue; // Hit an obstacle
+                        
+                        int ne = e - 1;
+                        if (ne < 0) continue; // Out of energy
+                        
+                        int nmask = mask;
+                        if (nc == 'L') {
+                            nmask |= (1 << litterIdx[nx][ny]); // Mark this litter as collected
+                        }
+                        
+                        if (nc == 'R') {
+                            ne = energy; // Replenish energy fully
+                        }
+                        
+                        // Check if all litter is collected
+                        if (nmask == targetMask) {
+                            return steps + 1;
+                        }
+                        
+                        // Pruning: Only add to queue if we arrive with strictly more energy than before
+                        if (ne > bestEnergy[nx][ny][nmask]) {
+                            bestEnergy[nx][ny][nmask] = ne;
+                            q.offer(new int[]{nx, ny, nmask, ne});
+                        }
+                    }
+                }
+            }
+            steps++;
+        }
+        
+        return -1; // Path to collect all litter is impossible
+    }
+}
+
+problem:- https://leetcode.com/problems/minimum-moves-to-clean-the-classroom/?envType=daily-question&envId=2026-09-01
