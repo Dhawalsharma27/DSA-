@@ -1,0 +1,12 @@
+class Solution {
+    public boolean uniformArray(int[] nums1) {
+        // we have two conditions 
+        // agar array ke pure elements even hue toh array ya pure elements odd hue to array return true karega
+        // aur agar array odd even hua toh second array array ko humlog odd hi bana denge using the odd elements
+        // For every index i where nums1[i] is already odd, keep it as is (nums2[i] = nums1[i]).
+        // For every index i where nums1[i] is even, subtract the odd number from it (nums2[i] = nums1[i] - nums1[j], where j is the index of your odd number
+        return true;
+    }
+}
+
+problem: https://leetcode.com/problems/construct-uniform-parity-array-i/?envType=daily-question&envId=2026-09-02
