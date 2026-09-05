@@ -1,0 +1,44 @@
+class Solution {
+    public int firstStableIndex(int[] nums, int k) {
+    // Array ki length nikal rahe hain
+    int n = nums.length;
+    
+    // Ek naya array banaya jo right side ke minimum elements store karega
+    int[] minFromIndex = new int[n];
+
+    // minElement ko sabse badi value (Infinity) se initialize kiya
+    int minElement = Integer.MAX_VALUE;
+    
+    // Step 1: Array ko peeche se (right to left) traverse kar rahe hain
+    for (int i = n - 1; i >= 0; i--) {
+        // Ab tak ka sabse chota (minimum) number find aur update kar rahe hain
+        minElement = Math.min(minElement, nums[i]);
+        
+        // Current index 'i' se array ke end tak ka minimum yahan store kar liya
+        minFromIndex[i] = minElement;
+    }
+
+    // maxElement ko sabse choti value (-Infinity) se initialize kiya, 
+    // yeh left se right jaate hue maximum track karega
+    int maxElement = Integer.MIN_VALUE;
+    
+    // Step 2: Array ko shuru se (left to right) traverse kar rahe hain
+    for (int i = 0; i < n; i++) {
+        // Index 0 se leke current index 'i' tak ka maximum number update kar rahe hain
+        maxElement = Math.max(maxElement, nums[i]);
+
+        // Main condition check kar rahe hain: 
+        // Kya (prefix ka max) aur (suffix ka min) ka difference 'k' se chota ya barabar hai?
+        if (maxElement - minFromIndex[i] <= k) {
+            // Jaise hi condition true hoti hai, hum index return kar dete hain.
+            // Kyunki hum left se chal rahe hain, yeh automatically smallest stable index hoga.
+            return i;
+        }
+    }
+
+    // Agar poora array check karne ke baad bhi koi stable index nahi mila, 
+    // toh problem ki requirement ke hisaab se -1 return kar do
+    return -1;
+    }
+}
+problem:- https://leetcode.com/problems/smallest-stable-index-ii/?envType=daily-question&envId=2026-09-05
