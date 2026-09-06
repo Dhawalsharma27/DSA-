@@ -1,0 +1,50 @@
+class Solution {
+    public int numDistinct(String s, String t) {
+        // s string ki length nikal kar m mein store kar li
+        int m = s.length();
+        // t string ki length nikal kar n mein store kar li
+        int n = t.length();
+
+        // 1D arrays banaye hain space optimization ke liye.
+        // 2D matrix (m*n) ki jagah hum sirf 2 rows (prev aur curr) use kar rahe hain.
+        // Double isliye use kiya gaya hai taaki bade test cases mein overflow na ho.
+        double[] prev = new double[n + 1];
+        double[] curr = new double[n + 1];
+
+        // Base case: Agar string 't' empty hai (length 0), toh s ke kisi bhi hisse se 
+        // usko banane ka sirf 1 hi tarika hota hai (matlab koi bhi character mat chuno).
+        prev[0] = 1;
+        curr[0] = 1;
+
+        // Outer loop: string 's' ke har character ko ek-ek karke check karenge
+        for (int i = 1; i <= m; i++) {
+            // Inner loop: string 't' ke har character ke liye check karenge
+            for (int j = 1; j <= n; j++) {
+                
+                // Agar s aur t ke current characters match kar jate hain...
+                if (s.charAt(i - 1) == t.charAt(j - 1)) {
+                    // Toh hamare paas 2 choices hoti hain:
+                    // 1. Is character ko include karein -> tab combinations `prev[j-1]` se aayenge.
+                    // 2. Is character ko skip (ignore) karein -> tab combinations `prev[j]` se aayenge.
+                    // Total combinations ke liye dono ko add kar diya.
+                    curr[j] = prev[j - 1] + prev[j];
+                } else {
+                    // Agar characters match nahi karte, toh humein is s[i-1] ko skip karna hi padega.
+                    // Isliye answer wahi rahega jo s ke pichle characters tak tha (yani prev[j]).
+                    curr[j] = prev[j];
+                }
+            }
+            
+            // Ek row complete hone ke baad, agli iteration (i+1) ke liye tayari.
+            // Jo abhi tak ki current row (curr) thi, wo ab purani row (prev) ban jayegi.
+            // Isliye curr ki saari values ko prev mein copy kar diya.
+            System.arraycopy(curr, 0, prev, 0, n + 1);
+        }
+
+        // Final answer humesha last cell (prev[n]) mein store hota hai. 
+        // Problem mein integer return karna hai isliye isko (int) mein cast karke bhej diya.
+        return (int) prev[n];
+    }
+}
+
+problem:- https://leetcode.com/problems/distinct-subsequences/?envType=daily-question&envId=2026-09-06
