@@ -1,0 +1,31 @@
+class Solution {
+    public int distinctSubseqII(String s) {
+        int MOD = 1_000_000_007;
+        
+        // dp array keeps track of the number of distinct subsequences 
+        // ending with each character ('a' to 'z').
+        int[] dp = new int[26];
+        int total = 0; 
+        
+        for (int i = 0; i < s.length(); i++) {
+            int c = s.charAt(i) - 'a';
+            
+            // Store the old count of subsequences ending with this character
+            int old_count = dp[c];
+            
+            // The new count of subsequences ending with this character
+            // is the total number of subsequences found so far + 1 (for the char itself)
+            dp[c] = (total + 1) % MOD;
+            
+            // Update the total count. 
+            // We subtract old_count to remove duplicates.
+            // Adding MOD before modulo handles potential negative numbers in Java.
+            total = ((total - old_count) % MOD + MOD) % MOD;
+            total = (total + dp[c]) % MOD;
+        }
+        
+        return total;
+    }
+}
+
+problem:- https://leetcode.com/problems/distinct-subsequences-ii/submissions/2134270000/?envType=daily-question&envId=2026-09-07
