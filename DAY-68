@@ -1,0 +1,16 @@
+class Solution {
+    public int countCommas(int n) {
+        // we know that number less then 1000 will contain 0 commas so we will count the commas after 1000 so if we subtract the total number form 999 then it will return the total number of commas in range 
+        // return Math.max(0 , n - 999);
+
+        // another method
+        if (n < 1000) {
+            return 0;
+        }else{
+            return n - 999;
+        }
+    }
+}
+
+
+problem :- https://leetcode.com/problems/count-commas-in-range/?envType=daily-question&envId=2026-09-08
