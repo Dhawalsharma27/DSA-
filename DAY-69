@@ -1,0 +1,26 @@
+class Solution {
+    public long countCommas(long n) {
+        // first initialize result varibale to store the result 
+        long result = 0;
+        // and lower will be 1000 as count start after 3 digits
+        long lower = 1000;
+        // from 10000 to 999999 there will be 1 comma and it will increase afterwards
+        long commas = 1;
+        // until the lower is less then the n 
+        while(lower <= n) {
+            // calculate the upper and check whether it is more than n iif yes then upper will be n
+            long upper = lower * 1000 - 1;
+            if( upper > n) upper = n;
+            // now count the number from a particular interval
+            long countnumbers = upper - lower + 1;
+            // and append the no. of commas in the result 
+            result += ( countnumbers * commas);
+            // update the lower and commas 
+            lower *= 1000;
+            commas ++;
+        }
+        return result;
+    }
+}
+
+problem :- https://leetcode.com/problems/count-commas-in-range-ii/?envType=daily-question&envId=2026-09-09
