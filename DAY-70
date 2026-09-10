@@ -1,0 +1,51 @@
+class Solution {
+    // Ek global variable banaya hai jo track karega ki kitne nodes condition satisfy karte hain.
+    // Ise class level pe rakha hai taki recursion ke andar ise easily update kiya ja sake.
+    int matchingNodeCount = 0;
+
+    public int averageOfSubtree(TreeNode root) {
+        // Yahan hum apna helper function (dfs) call kar rahe hain root node pass karke.
+        // Yeh function pure tree ko traverse karega aur counter ko update karega.
+        dfs(root);
+        
+        // Pura tree traverse hone ke baad, final answer return kar rahe hain.
+        return matchingNodeCount;
+    }
+
+    // Yeh recursive helper function hai. Yeh ek integer array return karega 
+    // jisme 2 values hongi: index 0 par 'sum' aur index 1 par 'count'.
+    private int[] dfs(TreeNode node) {
+        
+        // Base Case: Agar node null hai (yani leaf node ke aage chale gaye), 
+        // toh sum = 0 aur count = 0 return kardo.
+        if (node == null) {
+            return new int[]{0, 0};
+        }
+
+        // Recursive call left child ke liye. Yeh left subtree ka total sum aur node count layega.
+        int[] left = dfs(node.left);
+        
+        // Recursive call right child ke liye. Yeh right subtree ka total sum aur node count layega.
+        int[] right = dfs(node.right);
+
+        // Current subtree ka total sum nikal rahe hain: 
+        // (Left subtree ka sum) + (Right subtree ka sum) + (Current node ki khud ki value).
+        int currentSum = left[0] + right[0] + node.val;
+        
+        // Current subtree mein total nodes ka count nikal rahe hain:
+        // (Left ke nodes) + (Right ke nodes) + 1 (Current node khud).
+        int currentCount = left[1] + right[1] + 1;
+
+        // Condition check: Kya current subtree ka average (sum / count) node ki value ke equal hai?
+        if (currentSum / currentCount == node.val) {
+            // Agar haan, toh global counter ko 1 se increment kardo.
+            matchingNodeCount++;
+        }
+
+        // Current node apne parent ko apna total sum aur total count pass kar raha hai array format mein,
+        // taki parent node bhi apna calculation aage badha sake.
+        return new int[]{currentSum, currentCount};
+    }
+}
+
+problem:- https://leetcode.com/problems/count-nodes-equal-to-average-of-subtree/?envType=daily-question&envId=2026-09-10
