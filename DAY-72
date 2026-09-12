@@ -1,0 +1,108 @@
+import java.util.*;
+
+class Solution {
+    // DP State store karne ke liye ek helper class
+    class State {
+        long score;
+        int[] ids;
+        State(long score, int[] ids) {
+            this.score = score;
+            this.ids = ids;
+        }
+    }
+
+    public int[] maximumWeight(List<List<Integer>> intervals) {
+        int n = intervals.size();
+        
+        // Ek naya array banayenge jisme original index bhi track ho sake
+        int[][] inters = new int[n][4];
+        for (int i = 0; i < n; i++) {
+            inters[i][0] = intervals.get(i).get(0); // left boundary
+            inters[i][1] = intervals.get(i).get(1); // right boundary
+            inters[i][2] = intervals.get(i).get(2); // weight
+            inters[i][3] = i;                       // original index
+        }
+
+        // Intervals ko right boundary ke basis pe sort kar denge
+        // Taaki hum greedily pehle khatam hone wale intervals ko pick kar sakein
+        Arrays.sort(inters, (a, b) -> Integer.compare(a[1], b[1]));
+
+        // Right boundaries ka array binary search (bisectLeft) ke liye
+        int[] rights = new int[n];
+        for (int i = 0; i < n; i++) rights[i] = inters[i][1];
+
+        // dp[k][i] ko hum memory optimize karke sirf prev aur cur row mein rakh rahe hain
+        // prev row = max score and indices up to k-1 intervals
+        State[] prev = new State[n + 1];
+        for (int i = 0; i <= n; i++) prev[i] = new State(0L, new int[0]);
+
+        // Hum maximum 4 intervals pick kar sakte hain
+        for (int k = 1; k <= 4; k++) {
+            State[] cur = new State[n + 1];
+            cur[0] = new State(0L, new int[0]); // Base case: 0 intervals considered
+
+            for (int p = 1; p <= n; p++) {
+                // Option 1: Current interval ko chhod do (skip)
+                State skip = cur[p - 1];
+
+                // Option 2: Current interval ko pick karo
+                int l = inters[p - 1][0];
+                long w = inters[p - 1][2];
+                int id = inters[p - 1][3];
+
+                // Binary search se wo pehla interval dhoondho jo l se pehle end hota ho
+                // Valid tabhi hoga jab right boundary strictly less than left boundary ho (< l)
+                int j = bisectLeft(rights, l);
+                State takePrev = prev[j]; // prev array use karenge kyonki ek interval pick kar rahe hain
+
+                long newScore = takePrev.score + w;
+                
+                // Naye array mein previous indices + current id daalenge
+                int[] newIds = Arrays.copyOf(takePrev.ids, takePrev.ids.length + 1);
+                newIds[newIds.length - 1] = id;
+                Arrays.sort(newIds); // Tie-breaking lexicographical order mangti hai
+
+                // Dono options mein se jo better ho usko cur[p] mein store karo
+                if (isBetter(newScore, newIds, skip.score, skip.ids)) {
+                    cur[p] = new State(newScore, newIds);
+                } else {
+                    cur[p] = skip;
+                }
+            }
+            prev = cur; // Next k ke liye current row prev ban jayegi
+        }
+
+        return prev[n].ids;
+    }
+
+    // Binary search to find the number of elements strictly smaller than target
+    private int bisectLeft(int[] arr, int target) {
+        int left = 0, right = arr.length;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (arr[mid] >= target) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
+    // Custom comparator to check if Option A is strictly better than Option B
+    // Rules: Highest score wins -> If tied, lexicographically smallest index array wins
+    private boolean isBetter(long scoreA, int[] idsA, long scoreB, int[] idsB) {
+        if (scoreA != scoreB) {
+            return scoreA > scoreB; // Zyaada score hamesha better hai
+        }
+        
+        // Agar score same hai, toh element-by-element compare karenge (Lexicographical)
+        for (int i = 0; i < Math.min(idsA.length, idsB.length); i++) {
+            if (idsA[i] != idsB[i]) {
+                return idsA[i] < idsB[i]; // Chhota index better hai
+            }
+        }
+        // Agar ek array dusre ka prefix hai (halanki positive weights me ye rare hai)
+        return idsA.length < idsB.length;
+    }
+}
