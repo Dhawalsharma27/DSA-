@@ -1,0 +1,43 @@
+class Solution {
+    public int largestOverlap(int[][] img1, int[][] img2) {
+        int n = img1.length;
+        int max = 0; // Ab tak ka sabse best overlap count store karne ke liye
+
+        // r aur c: img1 ko img2 ke respect me har direction me shift karne ke liye
+        // Range -(n - 1) se lekar +(n - 1) tak hoti hai
+        for (int r = -n + 1; r < n; r++) {
+            for (int c = -n + 1; c < n; c++) {
+
+                int overlap = 0; // Current shift (r, c) par kitne 1 match hue
+
+                // img1 ke har ek cell (i, j) par traverse karo
+                for (int i = 0; i < n; i++) {
+                    for (int j = 0; j < n; j++) {
+
+                        // Shift apply karne ke baad img2 ke corresponding coordinates
+                        int x = i + r;
+                        int y = j + c;
+
+                        // Check karo:
+                        // 1. Shifted coordinates grid ke andar hi hone chahiye
+                        // 2. img1 aur img2 dono me us jagah 1 hona chahiye
+                        if (x >= 0 && x < n &&
+                            y >= 0 && y < n &&
+                            img1[i][j] == 1 &&
+                            img2[x][y] == 1) {
+
+                            overlap++; // Match mil gaya toh count badhao
+                        }
+                    }
+                }
+
+                // Har shift ke baad max overlap ko update karo
+                max = Math.max(max, overlap);
+            }
+        }
+
+        return max; // Maximum possible overlap return karo
+    }
+}
+
+problem:- https://leetcode.com/problems/image-overlap/?envType=daily-question&envId=2026-09-13
