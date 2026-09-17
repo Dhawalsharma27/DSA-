@@ -1,0 +1,52 @@
+import java.util.Arrays;
+
+class Solution {
+    public int minSumOfLengths(int[] arr, int target) {
+        int n = arr.length;
+        
+        // minLen[i] store karega index i tak (0 se i) milne wale 
+        // valid subarray (sum == target) ki minimum length.
+        int[] minLen = new int[n];
+        int INF = Integer.MAX_VALUE / 2; // Overflow se bachne ke liye safe infinity
+        Arrays.fill(minLen, INF);
+        
+        int windowSum = 0;
+        int left = 0;
+        int result = INF;
+        int currentBest = INF;
+        
+        // Sliding window use karenge kyunki saare arr[i] > 0 hain
+        for (int right = 0; right < n; right++) {
+            windowSum += arr[right];
+            
+            // Agar window ka sum target se bada ho gaya toh left pointer aage badhao
+            while (windowSum > target && left <= right) {
+                windowSum -= arr[left];
+                left++;
+            }
+            
+            // Valid subarray mil gaya jiska sum target ke barabar hai
+            if (windowSum == target) {
+                int len = right - left + 1;
+                
+                // Check karo agar left pointer se pehle koi valid subarray mila tha ya nahi
+                // Non-overlapping condition ensure hoti hai kyunki minLen[left - 1] 
+                // strictly left ke pehle end ho raha hai.
+                if (left > 0 && minLen[left - 1] != INF) {
+                    result = Math.min(result, len + minLen[left - 1]);
+                }
+                
+                // Ab tak ka sabse chota single subarray update karo
+                currentBest = Math.min(currentBest, len);
+            }
+            
+            // minLen array update karo current index ke liye
+            minLen[right] = currentBest;
+        }
+        
+        // Agar result INF hi reh gaya toh aisa koi pair nahi mila
+        return result >= INF ? -1 : result;
+    }
+}
+
+problem:- https://leetcode.com/problems/find-two-non-overlapping-sub-arrays-each-with-target-sum/submissions/2145048924/?envType=daily-question&envId=2026-09-17
