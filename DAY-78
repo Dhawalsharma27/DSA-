@@ -1,0 +1,43 @@
+import java.util.*;
+
+class Solution {
+    public String evaluate(String s, List<List<String>> knowledge) {
+        // Step 1: Saari [key, value] pairs ko HashMap me daal lo taaki O(1) me lookup mil sake
+        Map<String, String> map = new HashMap<>();
+        for (List<String> pair : knowledge) {
+            map.put(pair.get(0), pair.get(1));
+        }
+
+        // Final result banane ke liye StringBuilder use karenge
+        StringBuilder result = new StringBuilder();
+        int n = s.length();
+        int i = 0;
+
+        // String s ko start se end tak traverse karte hain
+        while (i < n) {
+            // Agar '(' mila, iska matlab yahan se key shuru ho rahi hai
+            if (s.charAt(i) == '(') {
+                // Closing bracket ')' ka index dhoondho
+                int j = s.indexOf(')', i + 1);
+
+                // '(' aur ')' ke beech ka part nikaal lo jo ki hamari key hai
+                String key = s.substring(i + 1, j);
+
+                // Agar map me key mil jaye toh uski value append karo, warna "?" daal do
+                result.append(map.getOrDefault(key, "?"));
+
+                // Pointer ko ')' ke agle character par jump kara do
+                i = j + 1;
+            } else {
+                // Normal character hai (bracket ke bahar), toh directly append kar do
+                result.append(s.charAt(i));
+                i++;
+            }
+        }
+
+        // Final converted string return kar do
+        return result.toString();
+    }
+}
+
+problem:- https://leetcode.com/problems/evaluate-the-bracket-pairs-of-a-string/?envType=daily-question&envId=2026-09-26
