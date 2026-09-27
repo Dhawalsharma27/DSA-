@@ -1,0 +1,55 @@
+import java.util.Stack;
+
+class Solution {
+    public String reverseParentheses(String s) {
+        int n = s.length();
+        // Matching brackets ke opening aur closing indices ko store karne ke liye stack
+        Stack<Integer> stack = new Stack<>();
+        
+        // door array 'wormhole' ka kaam karega:
+        // door['(' ka index] = ')' ka matching index
+        // door[')' ka index] = '(' ka matching index
+        int[] door = new int[n];
+
+        // Pehla Pass: Matching parentheses ke pairs connect karo
+        for (int i = 0; i < n; i++) {
+            if (s.charAt(i) == '(') {
+                // Opening bracket mila toh uska index stack me daal do
+                stack.push(i);
+            } else if (s.charAt(i) == ')') {
+                // Closing bracket mila toh latest opening bracket ka index pop karo
+                int j = stack.pop();
+                // Dono ko aapas me link (pair) kar do
+                door[i] = j;
+                door[j] = i;
+            }
+        }
+
+        // Doosra Pass: String ko traverse karke final characters collect karo
+        StringBuilder result = new StringBuilder();
+        
+        // flag traversal ki direction batata hai:
+        // +1 -> Left-to-Right
+        // -1 -> Right-to-Left
+        int flag = 1; 
+
+        // i += flag se direction ke mutabik aage ya peeche move karenge
+        for (int i = 0; i < n; i += flag) {
+            // Agar koi bhi bracket milta hai
+            if (s.charAt(i) == '(' || s.charAt(i) == ')') {
+                // Bracket ke matching partner par teleport kar jao
+                i = door[i];
+                // Direction ko reverse/flip kar do (+1 se -1 ya -1 se +1)
+                flag = -flag; 
+            } else {
+                // Normal English character hai toh directly result me daal do
+                result.append(s.charAt(i));
+            }
+        }
+
+        // Brackets ke bina final reversed string return karo
+        return result.toString();
+    }
+}
+
+problem:- https://leetcode.com/problems/reverse-substrings-between-each-pair-of-parentheses/?envType=daily-question&envId=2026-09-27
