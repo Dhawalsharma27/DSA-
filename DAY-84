@@ -1,0 +1,30 @@
+class Solution {
+    public int majorityElement(int[] nums) {
+        // first we initialize a varible to store the length of the arryand a hashmap to store the count
+        int n = nums.length;
+
+        int candidate = 0;
+        int count = 0;
+        // loop across the array
+        for( int num : nums) {
+            // check whether the count is 0 if yes then the candidate = num and count = 1
+            if(count == 0){
+                candidate = num;
+                count +=1;
+            // if candidate = num then count++
+            }else if ( num == candidate) {
+                count++;
+            // if num is diffrent then decrease the count
+            }else{
+                count--;
+            }
+            // at last return the num that is candidate if exist
+            return candidate;
+        }
+        // if not found then return -1
+        return -1;
+        
+    }
+}
+
+problem:- https://leetcode.com/problems/majority-element/description/
