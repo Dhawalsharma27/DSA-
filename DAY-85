@@ -1,0 +1,52 @@
+import java.util.*;
+class Solution {
+    public int longestValidParentheses(String s) {
+        // first we will convert the string input into the char array
+        char[] st = s.toCharArray();
+        // if the string is null or length is 0 return 0
+        if (st.length == 0 || st == null){
+            return 0;
+        }
+        // vriable to store the length of the string
+        int n = st.length;
+
+        int close = 0;
+        int open = 0;
+
+        int result = 0;
+        // Left to right
+        for( int i = 0 ; i < n ; i++) {
+            // if current char is ( increse count of open else increse the count of close
+            if (st[i] == '(') open++;
+            else close++;
+            // if close is more then open then there is no space for valid substring  so reinitialize open and close to 0
+            if (close > open) {
+                open = close = 0;
+            }
+            // if open and close are equal then update the result to open + close
+            if ( open == close) {
+                result = Math.max(open + close, result);
+            }
+        }
+        // right to left
+        // reinitialize open and close to 0
+        open = close = 0;
+        // if current char is ( increse count of open else increse the count of close
+        for( int i = n -1 ; i >= 0 ; i--) {
+            if (st[i] == '(') open++;
+            else close++;
+            // if open is more then close then there is no space for valid substring  so reinitialize open and close to 0
+            if (open > close) {
+                open = close = 0;
+            }
+            // if open and close are equal then update the result to open + close
+            if ( open == close) {
+                result = Math.max(open + close, result);
+            }
+        }
+
+        return result;
+    }
+}
+
+problem:- https://leetcode.com/problems/longest-valid-parentheses/
