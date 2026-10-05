@@ -1,0 +1,30 @@
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int n = nums.length;
+        int sum = 0;
+        
+        // Agar saare numbers negative hue, toh 0 galat answer dega, 
+        // isliye pehle element se initialize kiya
+        int max_sum = nums[0]; 
+
+        for (int i = 0; i < n; i++) {
+            // Current element ko running sum me add karo
+            sum = sum + nums[i];
+
+            // Agar naya sum ab tak ke maximum se bada hai, toh update karo
+            if (sum > max_sum) {
+                max_sum = sum;
+            }
+
+            // Agar sum negative ho gaya, toh aage ke subarray ke liye ye bojh banega,
+            // isliye isko discard karke sum ko wapas 0 reset kar do
+            if (sum < 0) {
+                sum = 0;
+            }
+        }
+
+        return max_sum;
+    }
+}
+
+problem:- https://leetcode.com/problems/maximum-subarray/
