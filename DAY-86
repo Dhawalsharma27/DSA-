@@ -1,0 +1,28 @@
+class Solution {
+    public int scoreOfParentheses(String s) {
+        int score = 0; // Total score store karne ke liye
+        int depth = 0; // Current nesting depth (kitne open brackets ke andar hain)
+
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                // Naya level andar ja rahe hain, toh depth badha do
+                depth++;
+            } else {
+                // Ek level bahar aa rahe hain, toh depth ghata do
+                depth--;
+
+                // Key Logic: Sirf innermost "()" pair hi score generate karta hai.
+                // Baki nesting toh sirf us score ko multiply (2 se) karti hai.
+                // Agar pichhla character '(' tha, matlab ye direct "()" unit hai.
+                // 1 << depth ka matlab hota hai 2^depth (bit manipulation).
+                if (s.charAt(i - 1) == '(') {
+                    score += (1 << depth);
+                }
+            }
+        }
+
+        return score;
+    }
+}
+
+problem:- https://leetcode.com/problems/score-of-parentheses/?envType=daily-question&envId=2026-10-05
