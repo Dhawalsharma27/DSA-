@@ -1,0 +1,27 @@
+class Solution {
+    public int minAddToMakeValid(String s) {
+        int open = 0;
+        int close = 0;
+        for ( char c : s.toCharArray()) {
+            // if the character == '(' increase the open count
+            if ( c == '(') {
+                open++;
+            } else {
+                // if the character is ')' and open > 0 decrease the open count
+                if( open > 0 && c == ')'){
+                    open--;
+                } else {
+                    // else increase the close count
+                    close++;
+                }
+                
+            }
+
+        }
+        // return the open + close 
+        return open + close;
+
+    }
+} 
+
+problem:- https://leetcode.com/problems/minimum-add-to-make-parentheses-valid/?envType=daily-question&envId=2026-10-06
