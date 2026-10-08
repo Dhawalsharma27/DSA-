@@ -1,0 +1,34 @@
+class Solution {
+    public String removeOuterParentheses(String s) {
+        StringBuilder result = new StringBuilder();
+        
+        // depth track karega ki hum kitne level andar hain
+        int depth = 0;
+
+        for (char c : s.toCharArray()) {
+            if (c == '(') {
+                // Agar depth > 0 hai, matlab ye outermost '(' nahi hai, 
+                // kisi primitive ke andar ka part hai, toh result me add karo
+                if (depth > 0) {
+                    result.append(c);
+                }
+                // Naya '(' mila, isliye depth badha di
+                depth++;
+            } else {
+                // Closing ')' mila, toh pehle depth kam karo
+                depth--;
+                
+                // Agar depth kam karne ke baad bhi > 0 hai, 
+                // iska matlab ye outermost ')' nahi tha, toh result me add karo
+                // (Outer ')' tab banta hai jab depth girkar 0 ho jati hai)
+                if (depth > 0) {
+                    result.append(c);
+                }
+            }
+        }
+
+        return result.toString();
+    }
+}
+
+problem:- https://leetcode.com/problems/remove-outermost-parentheses/?envType=daily-question&envId=2026-10-08DAY
