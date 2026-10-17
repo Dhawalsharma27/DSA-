@@ -1,0 +1,62 @@
+import java.util.*;
+
+class Solution {
+    public int minSwaps(int[] nums) {
+        int n = nums.length;
+        
+        // Element: [value, original_index, digit_sum]
+        int[][] arr = new int[n][3];
+        for (int i = 0; i < n; i++) {
+            arr[i][0] = nums[i];
+            arr[i][1] = i;
+            arr[i][2] = getDigitSum(nums[i]);
+        }
+        
+        // Sort according to problem rules: digit sum ascending, then value ascending
+        Arrays.sort(arr, (a, b) -> {
+            if (a[2] != b[2]) {
+                return Integer.compare(a[2], b[2]);
+            }
+            return Integer.compare(a[0], b[0]);
+        });
+        
+        // Count cycles in the permutation
+        boolean[] visited = new boolean[n];
+        int cycles = 0;
+        
+        for (int i = 0; i < n; i++) {
+            // If already visited or already in the correct place
+            if (visited[i] || arr[i][1] == i) {
+                continue;
+            }
+            
+            // Traverse the cycle
+            int curr = i;
+            while (!visited[curr]) {
+                visited[curr] = true;
+                curr = arr[curr][1];
+            }
+            cycles++;
+        }
+        
+        // Each element already in place forms a 1-cycle
+        for (int i = 0; i < n; i++) {
+            if (!visited[i] && arr[i][1] == i) {
+                cycles++;
+            }
+        }
+        
+        return n - cycles;
+    }
+    
+    private int getDigitSum(int val) {
+        int sum = 0;
+        while (val > 0) {
+            sum += val % 10;
+            val /= 10;
+        }
+        return sum;
+    }
+}
+
+problem:- https://leetcode.com/problems/minimum-swaps-to-sort-by-digit-sum/?envType=daily-question&envId=2026-10-17
