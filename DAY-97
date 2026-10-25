@@ -1,0 +1,47 @@
+class Solution {
+    public int closedIsland(int[][] grid) {
+        int m = grid.length; // row
+        int n = grid[0].length; // column
+        int count = 0;
+
+        for (int i = 0 ; i < m; i ++ ) {
+            for (int j = 0 ; j < n ; j++ ) {
+                // Agar cell 0 (land) hai, toh check karenge ki kya ye closed island ka part hai
+                if ( grid[i][j] == 0) {
+                    // Agar DFS true return kare, matlab ye island charo taraf se water se surrounded hai
+                    if (dfs(grid, i , j , m , n)){
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+        
+    }
+
+    private boolean dfs ( int[][] grid, int r, int c , int m , int n) {
+        // Base Case 1: Agar grid ki boundary ke bahar nikal gaye,
+        // iska matlab ye island open hai (boundary ko touch kar raha hai), toh false return karo
+        if ( r < 0 || r >= m || c < 0 || c >= n ) {
+            return false;
+        }
+        // Base Case 2: Agar water (1) mil gaya,
+        // iska matlab is side se boundary protected/closed hai, toh true return karo
+        if (grid[r][c] == 1){
+            return true;
+        }
+        // Land (0) ko visit mark karne ke liye 1 (water) bana dete hain
+        // taaki infinite recursion na ho
+        grid[r][c] = 1;
+
+        // Charo directions (Left, Right, Up, Down) me explore karte hain
+        // Note: Chaaro recursive calls run hona zaroori hai taaki pura island visit ho sake
+        boolean left = dfs(grid , r, c -1, m, n);
+        boolean right = dfs(grid , r, c + 1 , m, n);
+        boolean up = dfs(grid , r -1, c, m, n);
+        boolean down = dfs(grid , r + 1, c , m, n);
+
+        // Island tabhi closed maana jayega jab chaaro directions closed hon (sabse true mile)
+        return left && right && up && down;
+    }
+}
