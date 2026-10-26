@@ -1,0 +1,39 @@
+class Solution {
+    public int countIslands(int[][] grid, int k) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int count = 0;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // check Karo ki Grid Ki Value 0 se agar badi hai
+                if (grid[i][j] > 0) {
+                    // Agar calculated sum divisible hai five se Toh couunt ko increase Kardo
+                    long totalSum = dfs(grid, i, j);
+                    if (totalSum % k == 0) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+    private long dfs(int[][] grid, int r, int c) {
+        if (r < 0 || r >= grid.length || c < 0 || c >= grid[0].length || grid[r][c] == 0) {
+            return 0;
+        }
+
+        // Cell ki value store karo aur usko 0 (visited) mark karo
+        long sum = grid[r][c];
+        grid[r][c] = 0;
+
+        // 4 directions me explore karke sum collect karo by increase the sum value
+        sum += dfs(grid, r + 1, c);
+        sum += dfs(grid, r - 1, c);
+        sum += dfs(grid, r, c + 1);
+        sum += dfs(grid, r, c - 1);
+
+        return sum;
+    }
+}
